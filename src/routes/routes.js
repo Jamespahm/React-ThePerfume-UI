@@ -1,25 +1,16 @@
 import config from '~/config';
 
 // Layouts
-// import { HeaderOnly } from '~/layouts';
+import { HeaderOnly } from '~/layouts';
 
 // Pages
-import Home from '~/pages/Home';
-import Shop from '~/pages/Shop';
-// import Following from '~/pages/Following';
-// import Profile from '~/pages/Profile';
-// import Upload from '~/pages/Upload';
-// import Search from '~/pages/Search';
-// import Live from '~/pages/Live';
+import Home from '~/pages/User/Home';
+import Shop from '~/pages/User/Shop';
 
 // Public routes
 const publicRoutes = [
     { path: config.routes.home, component: Home },
-    { path: config.routes.shop, component: Shop, layout: null },
-    // { path: config.routes.live, component: Live },
-    // { path: config.routes.profile, component: Profile },
-    // { path: config.routes.upload, component: Upload },
-    // { path: config.routes.search, component: Search, layout: null },
+    { path: config.routes.shop, component: Shop, layout: HeaderOnly },
 ];
 
 const privateRoutes = [];

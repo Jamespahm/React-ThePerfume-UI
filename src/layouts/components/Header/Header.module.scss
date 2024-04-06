@@ -7,13 +7,15 @@
 
 .header__top {
     background: #111111;
-    padding: 10px 0;
+    // padding: 10px 0;
 }
 
 .header__top__left {
+    align-self: center;
     p {
         color: var(--white-color);
         margin-bottom: 0;
+        line-height: 42px;
     }
 }
 
@@ -32,9 +34,12 @@
         letter-spacing: 2px;
         margin-right: 28px;
         display: inline-block;
-
         &:last-child {
             margin-right: 0;
+        }
+        &:hover {
+            color: var(--white-color);
+            text-decoration: underline;
         }
     }
 }
@@ -42,11 +47,12 @@
 .header__top__hover {
     display: inline-block;
     position: relative;
-
+    padding: 10px 0;
     &:hover {
         ul {
-            top: 35px;
+            top: 42px;
             opacity: 1;
+            transform: scale(1);
             visibility: visible;
         }
     }
@@ -70,22 +76,23 @@
     ul {
         background: var(--white-color);
         position: absolute;
-        left: 0;
-        top: 40px;
-        opacity: 0;
         visibility: hidden;
         z-index: 3;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        transform: transition(all, 0.3s);
-        padding: 10px 0;
+        border-radius: 3px;
         width: 140px;
-        height: 120px;
         text-align: center;
         li {
             list-style: none;
-            font-size: 13px;
-            color: #111111;
+            font-size: 15px;
+            padding: 6px 0;
             cursor: pointer;
+            a {
+                color: #000;
+            }
+            &:hover {
+                background-color: rgb(236, 236, 236);
+            }
         }
     }
 }

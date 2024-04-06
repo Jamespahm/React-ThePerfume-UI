@@ -27,39 +27,41 @@
 
 html {
     font-size: 62.5%;
+    height: 100%;
 }
 
 body {
+    height: 100%;
     font-family: var(--font-family);
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     line-height: 1.5;
     text-rendering: optimizespeed;
     color: var(--text-color);
     overflow-y: overlay;
 }
 
-// Scrollbar CSS
-html *::-webkit-scrollbar {
-    border-radius: 0;
-    width: 8px;
-}
+// // Scrollbar CSS
+// html *::-webkit-scrollbar {
+//     border-radius: 0;
+//     width: 8px;
+// }
 
-html *::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.15);
-}
+// html *::-webkit-scrollbar-thumb {
+//     border-radius: 4px;
+//     background-color: rgba(0, 0, 0, 0.15);
+// }
 
-html *::-webkit-scrollbar-track {
-    border-radius: 0;
-    background-color: rgba(0, 0, 0, 0);
-}
+// html *::-webkit-scrollbar-track {
+//     border-radius: 0;
+//     background-color: rgba(0, 0, 0, 0);
+// }
 
-button,
-input,
-[tabindex] {
-    outline: none;
-    border: none;
-}
+// button,
+// input,
+// [tabindex] {
+//     outline: none;
+//     border: none;
+// }
 /******************************************************************
   Template Name: Male Fashion
   Description: Male Fashion - ecommerce teplate
@@ -146,18 +148,23 @@ button:focus,
 textarea:focus {
     outline: none;
 }
-
+a {
+    color: #000;
+}
 a:hover,
 a:focus {
     text-decoration: none;
     outline: none;
-    color: var(white-color);
 }
 
 ul,
 ol {
     padding: 0;
     margin: 0;
+}
+
+li {
+    list-style: none;
 }
 
 /*---------------------
@@ -204,8 +211,8 @@ ol {
 .text-white p,
 .text-white span,
 .text-white li,
-.text-white a {
-    color: #fff;
+.text-black a {
+    color: #000;
 }
 
 /* buttons */
@@ -215,19 +222,19 @@ ol {
     font-weight: 700;
     text-transform: uppercase;
     padding: 14px 30px;
-    color: var(white-color);
+    color: var(--white-color);
     background: #000;
     letter-spacing: 4px;
 }
 .primary-btn:hover {
     text-decoration: none;
     background: #242424;
-    color: var(white-color);
+    color: var(--white-color);
 }
 
 .site-btn {
     font-size: 14px;
-    color: var(white-color);
+    color: var(--white-color);
     background: var(heading-color);
     font-weight: 700;
     border: none;

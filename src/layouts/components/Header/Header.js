@@ -7,6 +7,7 @@ import images from '~/assets/img';
 
 import { FiSearch } from 'react-icons/fi';
 import { MdFavoriteBorder, MdOutlineShoppingBag } from 'react-icons/md';
+import { FaChevronDown } from 'react-icons/fa';
 
 const cx = classNames.bind(style);
 
@@ -15,14 +16,14 @@ function Header() {
         // <div className={cx('wrapper')}>
         <header className={cx('header')}>
             <div className={cx('header__top')}>
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-6 col-md-7">
+                <div className={cx('container')}>
+                    <div className={cx('row')}>
+                        <div className={cx('col-lg-6')}>
                             <div className={cx('header__top__left')}>
                                 <p>Miễn phí vận chuyển, đảm bảo hoàn trả hoặc hoàn tiền trong 30 ngày.</p>
                             </div>
                         </div>
-                        <div className="col-lg-6 col-md-5">
+                        <div className={cx('col-lg-6')}>
                             <div className={cx('header__top__right')}>
                                 <div className={cx('header__top__links')}>
                                     <Link to="#">VND</Link>
@@ -30,14 +31,14 @@ function Header() {
                                 </div>
                                 <div className={cx('header__top__hover')}>
                                     <span>
-                                        Đăng Nhập <i className="arrow_carrot-down"></i>
+                                        Đăng Nhập <FaChevronDown />
                                     </span>
                                     <ul>
                                         <li>
-                                            <p to="/user/login">Đăng Nhập</p>
+                                            <Link to="/user/login">Đăng Nhập</Link>
                                         </li>
                                         <li>
-                                            <p to="/user/signup">Đăng Ký</p>
+                                            <Link to="/user/signup">Đăng Ký</Link>
                                         </li>
                                         <li>Đăng Xuất</li>
                                     </ul>
@@ -48,19 +49,19 @@ function Header() {
                 </div>
             </div>
 
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-3 col-md-3">
+            <div className={cx('container')}>
+                <div className={cx('row')}>
+                    <div className={cx('col-lg-3', 'col-md-3')}>
                         <div className={cx('header__logo')}>
                             <Link to={config.home}>
                                 <img src={images.logoHead} alt="logo" />
                             </Link>
                         </div>
                     </div>
-                    <div className="col-lg-6 col-md-6">
+                    <div className={cx('col-lg-6', 'col-md-6')}>
                         <nav className={cx('header__menu', 'mobile-menu')}>
                             <ul>
-                                <li className="active">
+                                <li className={cx('active')}>
                                     <Link to="/user/home">Trang Chủ</Link>
                                 </li>
                                 <li>
@@ -95,7 +96,8 @@ function Header() {
                             </ul>
                         </nav>
                     </div>
-                    <div className="col-lg-3 col-md-3">
+
+                    <div className={cx('col-lg-3', 'col-md-3')}>
                         <div className={cx('header__nav__option')}>
                             <Link to="#">
                                 <FiSearch />
@@ -110,7 +112,7 @@ function Header() {
                     </div>
                 </div>
                 <div className={cx('canvas__open')}>
-                    <i className="fa fa-bars"></i>
+                    <i className={cx('fa fa-bars')}></i>
                 </div>
             </div>
         </header>
