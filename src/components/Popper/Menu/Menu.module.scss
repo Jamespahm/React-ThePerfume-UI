@@ -1,0 +1,47 @@
+.menu-list {
+    width: 240px;
+    margin-top: 5px;
+    .menu-item {
+        width: 100%;
+        color: #000;
+        justify-content: flex-start;
+        margin-left: 0 !important;
+        border-radius: 0;
+        padding: 11px 16px;
+        line-height: 1.8rem;
+        font-weight: 600;
+        transition: background-color ease-in 100ms;
+        &.separate {
+            border-top: 1px solid rgba(22, 24, 35, 0.12);
+        }
+
+        &:hover {
+            background-color: rgba(22, 24, 35, 0.03);
+        }
+    }
+}
+.menu-body {
+    overflow-y: auto;
+}
+
+// Menu items
+
+.header {
+    width: 100%;
+    height: 40px;
+    position: relative;
+}
+.back-btn {
+    width: 50px;
+    height: 40px;
+    background-color: transparent;
+    position: absolute;
+    left: 10px;
+    font-size: 2.2rem;
+    border: none;
+}
+.header-title {
+    text-align: center;
+    font-size: 1.8rem;
+    line-height: 40px;
+}

@@ -40,28 +40,28 @@ body {
     overflow-y: overlay;
 }
 
-// // Scrollbar CSS
-// html *::-webkit-scrollbar {
-//     border-radius: 0;
-//     width: 8px;
-// }
+// Scrollbar CSS
+html *::-webkit-scrollbar {
+    border-radius: 0;
+    width: 8px;
+}
 
-// html *::-webkit-scrollbar-thumb {
-//     border-radius: 4px;
-//     background-color: rgba(0, 0, 0, 0.15);
-// }
+html *::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
 
-// html *::-webkit-scrollbar-track {
-//     border-radius: 0;
-//     background-color: rgba(0, 0, 0, 0);
-// }
+html *::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
 
-// button,
-// input,
-// [tabindex] {
-//     outline: none;
-//     border: none;
-// }
+button,
+input,
+[tabindex] {
+    outline: none;
+    border: none;
+}
 /******************************************************************
   Template Name: Male Fashion
   Description: Male Fashion - ecommerce teplate
@@ -148,9 +148,9 @@ button:focus,
 textarea:focus {
     outline: none;
 }
-a {
-    color: #000;
-}
+// a {
+//     color: #000;
+// }
 a:hover,
 a:focus {
     text-decoration: none;
