@@ -115,7 +115,7 @@ const USER_MENU = [
     },
 ];
 function Header() {
-    const currentUser = true;
+    const currentUser = false;
 
     return (
         <header className={cx('header')}>

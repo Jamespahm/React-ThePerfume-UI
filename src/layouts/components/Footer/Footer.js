@@ -82,9 +82,9 @@ function Footer() {
                                     Hãy là người đầu tiên biết về sản phẩm mới, các chương trình khuyến mãi của cửa
                                     hàng!
                                 </p>
-                                <form action="#">
-                                    <input type="text" placeholder="Gửi email" />
-                                    <button type="submit">
+                                <form action="footer-send-email">
+                                    <input id="footer-send-email" type="text" placeholder="Gửi email ..." />
+                                    <button htmlFor="footer-send-email" type="submit">
                                         <RiMailSendLine className={cx('footer--icon__send')} />
                                     </button>
                                 </form>

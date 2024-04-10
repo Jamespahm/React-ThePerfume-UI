@@ -1,18 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Shop.module.scss';
 import { Link } from 'react-router-dom';
 import config from '~/config/routes';
 
-import {
-    IoStar,
-    IoStarOutline,
-    IoStarHalf,
-    IoSearch,
-    IoChevronDownSharp,
-    IoChevronForwardSharp,
-} from 'react-icons/io5';
+import { IoSearch, IoChevronDownSharp, IoChevronForwardSharp } from 'react-icons/io5';
 import { FaCircleXmark } from 'react-icons/fa6';
+import ProductItem from '~/components/ProductItem/ProductItem';
 
 const cx = classNames.bind(styles);
 
@@ -23,8 +17,39 @@ function Shop() {
     const handleClear = () => {
         setSearchValue('');
         inputRef.current.focus();
-        // setSearchResult([]);
     };
+
+    const [result, setResult] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/perfume`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log(data);
+                setResult(data);
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
     return (
         <>
             <section className={cx('breadcrumb-option')}>
@@ -171,7 +196,6 @@ function Shop() {
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div className={cx('card')}>
                                             <div className={cx('card-heading')}>
                                                 <Link to="#" data-toggle="collapse" data-target="#collapseFour">
@@ -212,7 +236,6 @@ function Shop() {
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div className={cx('card')}>
                                             <div className={cx('card-heading')}>
                                                 <Link to="" data-toggle="collapse" data-target="#collapseSix">
@@ -264,300 +287,9 @@ function Shop() {
                                 </div>
                             </div>
                             <div className={cx('row')}>
-                                <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
-                                    <div className={cx('product__item')}>
-                                        <div className={cx('product__item__pic', 'set-bg')}>
-                                            <img
-                                                src={require('~/assets/img/product/Gucci/Bloom Acqua di Fiori/bl1.jpg')}
-                                                alt=""
-                                            />
-                                            <span className={cx('label')}>New</span>
-                                            <ul className={cx('product__hover')}>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/heart.png')} alt="" />
-                                                        <span>Yêu thích</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/cart.png')} alt="" />
-                                                        <span>Giỏ hàng</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="/user/shop-details">
-                                                        <img src={require('~/assets/img/icon/compare.png')} alt="" />
-                                                        <span>Chi tiết</span>
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div className={cx('product__item__text')}>
-                                            <h6>Piqué Biker Jacket</h6>
-                                            <div className={cx('rating')}>
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStarHalf />
-                                                <IoStarOutline />
-                                            </div>
-                                            <h6>$67.24</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
-                                    <div className={cx('product__item')}>
-                                        <div className={cx('product__item__pic', 'set-bg')}>
-                                            <img
-                                                src={require('~/assets/img/product/Gucci/Bloom Acqua di Fiori/bl1.jpg')}
-                                                alt=""
-                                            />
-                                            <span className={cx('label')}>New</span>
-                                            <ul className={cx('product__hover')}>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/heart.png')} alt="" />
-                                                        <span>Yêu thích</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/cart.png')} alt="" />
-                                                        <span>Giỏ hàng</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="/user/shop-details">
-                                                        <img src={require('~/assets/img/icon/compare.png')} alt="" />
-                                                        <span>Chi tiết</span>
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div className={cx('product__item__text')}>
-                                            <h6>Piqué Biker Jacket</h6>
-                                            <div className={cx('rating')}>
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStarHalf />
-                                                <IoStarOutline />
-                                            </div>
-                                            <h6>$67.24</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
-                                    <div className={cx('product__item')}>
-                                        <div className={cx('product__item__pic', 'set-bg')}>
-                                            <img
-                                                src={require('~/assets/img/product/Gucci/Bloom Acqua di Fiori/bl1.jpg')}
-                                                alt=""
-                                            />
-                                            <span className={cx('label')}>New</span>
-                                            <ul className={cx('product__hover')}>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/heart.png')} alt="" />
-                                                        <span>Yêu thích</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/cart.png')} alt="" />
-                                                        <span>Giỏ hàng</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="/user/shop-details">
-                                                        <img src={require('~/assets/img/icon/compare.png')} alt="" />
-                                                        <span>Chi tiết</span>
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div className={cx('product__item__text')}>
-                                            <h6>Piqué Biker Jacket</h6>
-                                            <div className={cx('rating')}>
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStarHalf />
-                                                <IoStarOutline />
-                                            </div>
-                                            <h6>$67.24</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
-                                    <div className={cx('product__item')}>
-                                        <div className={cx('product__item__pic', 'set-bg')}>
-                                            <img
-                                                src={require('~/assets/img/product/Gucci/Bloom Acqua di Fiori/bl1.jpg')}
-                                                alt=""
-                                            />
-                                            <span className={cx('label')}>New</span>
-                                            <ul className={cx('product__hover')}>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/heart.png')} alt="" />
-                                                        <span>Yêu thích</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/cart.png')} alt="" />
-                                                        <span>Giỏ hàng</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="/user/shop-details">
-                                                        <img src={require('~/assets/img/icon/compare.png')} alt="" />
-                                                        <span>Chi tiết</span>
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div className={cx('product__item__text')}>
-                                            <h6>Piqué Biker Jacket</h6>
-                                            <div className={cx('rating')}>
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStarHalf />
-                                                <IoStarOutline />
-                                            </div>
-                                            <h6>$67.24</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
-                                    <div className={cx('product__item')}>
-                                        <div className={cx('product__item__pic', 'set-bg')}>
-                                            <img
-                                                src={require('~/assets/img/product/Gucci/Bloom Acqua di Fiori/bl1.jpg')}
-                                                alt=""
-                                            />
-                                            <span className={cx('label')}>New</span>
-                                            <ul className={cx('product__hover')}>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/heart.png')} alt="" />
-                                                        <span>Yêu thích</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/cart.png')} alt="" />
-                                                        <span>Giỏ hàng</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="/user/shop-details">
-                                                        <img src={require('~/assets/img/icon/compare.png')} alt="" />
-                                                        <span>Chi tiết</span>
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div className={cx('product__item__text')}>
-                                            <h6>Piqué Biker Jacket</h6>
-                                            <div className={cx('rating')}>
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStarHalf />
-                                                <IoStarOutline />
-                                            </div>
-                                            <h6>$67.24</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
-                                    <div className={cx('product__item')}>
-                                        <div className={cx('product__item__pic', 'set-bg')}>
-                                            <img
-                                                src={require('~/assets/img/product/Gucci/Bloom Acqua di Fiori/bl1.jpg')}
-                                                alt=""
-                                            />
-                                            <span className={cx('label')}>New</span>
-                                            <ul className={cx('product__hover')}>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/heart.png')} alt="" />
-                                                        <span>Yêu thích</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/cart.png')} alt="" />
-                                                        <span>Giỏ hàng</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="/user/shop-details">
-                                                        <img src={require('~/assets/img/icon/compare.png')} alt="" />
-                                                        <span>Chi tiết</span>
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div className={cx('product__item__text')}>
-                                            <h6>Piqué Biker Jacket</h6>
-                                            <div className={cx('rating')}>
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStarHalf />
-                                                <IoStarOutline />
-                                            </div>
-                                            <h6>$67.24</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
-                                    <div className={cx('product__item')}>
-                                        <div className={cx('product__item__pic', 'set-bg')}>
-                                            <img
-                                                src={require('~/assets/img/product/Gucci/Bloom Acqua di Fiori/bl1.jpg')}
-                                                alt=""
-                                            />
-                                            <span className={cx('label')}>New</span>
-                                            <ul className={cx('product__hover')}>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/heart.png')} alt="" />
-                                                        <span>Yêu thích</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="#">
-                                                        <img src={require('~/assets/img/icon/cart.png')} alt="" />
-                                                        <span>Giỏ hàng</span>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link to="/user/shop-details">
-                                                        <img src={require('~/assets/img/icon/compare.png')} alt="" />
-                                                        <span>Chi tiết</span>
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div className={cx('product__item__text')}>
-                                            <h6>Piqué Biker Jacket</h6>
-                                            <div className={cx('rating')}>
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStarHalf />
-                                                <IoStarOutline />
-                                            </div>
-                                            <h6>$67.24</h6>
-                                        </div>
-                                    </div>
-                                </div>
+                                {result.map((item) => (
+                                    <ProductItem key={item.ID} data={item} />
+                                ))}
                             </div>
 
                             <div className={cx('row')}>

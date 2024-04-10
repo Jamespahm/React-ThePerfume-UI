@@ -10,6 +10,49 @@ const cx = classNames.bind(style);
 function Home() {
     return (
         <>
+            <div id="carouselExampleFade" className="carousel slide carousel-fade" data-ride="carousel">
+                <div className={cx('carousel-inner')}>
+                    <div className={cx('carousel-item active')}>
+                        <img
+                            src={require('~/assets/img/banner/271495673_1604142653284925_1036844338235843408_n.jpg')}
+                            className={cx('d-block w-100')}
+                            alt="..."
+                        />
+                    </div>
+                    <div className={cx('carousel-item')}>
+                        <img
+                            src={require('~/assets/img/banner/294372419_1750235718675617_4597454377284936060_n.jpg')}
+                            className={cx('d-block w-100')}
+                            alt="..."
+                        />
+                    </div>
+                    <div className={cx('carousel-item')}>
+                        <img
+                            src={require('~/assets/img/banner/301993485_1782695175429671_5496805865580899953_n.jpg')}
+                            className={cx('d-block w-100')}
+                            alt="..."
+                        />
+                    </div>
+                </div>
+                <button
+                    className={cx('carousel-control-prev')}
+                    type="button"
+                    data-target="#carouselExampleFade"
+                    data-slide="prev"
+                >
+                    <span className={cx('carousel-control-prev-icon')} aria-hidden="true"></span>
+                    <span className={cx('sr-only')}>Previous</span>
+                </button>
+                <button
+                    className={cx('carousel-control-next')}
+                    type="button"
+                    data-target="#carouselExampleFade"
+                    data-slide="next"
+                >
+                    <span className={cx('carousel-control-next-icon')} aria-hidden="true"></span>
+                    <span className={cx('sr-only')}>Next</span>
+                </button>
+            </div>
             <section className={cx('banner', 'spad')}>
                 <div className={cx('container')}>
                     <div className={cx('row')}>
@@ -19,7 +62,7 @@ function Home() {
                                     <img src={require('~/assets/img/banner/banner-1.jpg')} alt="" />
                                 </div>
                                 <div className={cx('banner__item__text')}>
-                                    <h2>Bộ Sưu Tập Nước Hoa Nam </h2>
+                                    <h2>Nước Hoa Chính Hãng </h2>
                                     <Link to="#">Xem Ngay</Link>
                                 </div>
                             </div>
@@ -30,7 +73,7 @@ function Home() {
                                     <img src={require('~/assets/img/banner/banner-2.jpg')} alt="" />
                                 </div>
                                 <div className={cx('banner__item__text')}>
-                                    <h2>Phụ Kiện Không Thể Thiếu</h2>
+                                    <h2>Bộ Sưu Tập Nước Hoa Cho Nam Giới</h2>
                                     <Link to="#">Xem Ngay</Link>
                                 </div>
                             </div>
@@ -41,7 +84,7 @@ function Home() {
                                     <img src={require('~/assets/img/banner/banner-3.jpg')} alt="" />
                                 </div>
                                 <div className={cx('banner__item__text')}>
-                                    <h2>Nước Hoa Chính Hãng</h2>
+                                    <h2>Các Thương Hiệu Hàng Đầu</h2>
                                     <Link to="#">Xem Ngay</Link>
                                 </div>
                             </div>
@@ -592,12 +635,12 @@ function Home() {
                             <div className={cx('instagram__text')}>
                                 <h2>Instagram</h2>
                                 <p>
-                                    Đến với The Luxury Perfumes, bạn thoải mái tìm kiếm và trải nghiệm rất nhiều nhãn
-                                    hiệu nổi tiếng, từ cao cấp cho tới bình dân. Tới Showroom để thoả sức trải nghiệm
-                                    dịch vụ, xịt thử và lựa chọn cho mình một mùi hương ưng ý. The Luxury Perfumes tự
-                                    hào là trung tâm nước hoa hàng đầu, với gần 20 năm trong ngành xa xỉ phẩm này. Chất
-                                    lượng đảm bảo, hàng chính hãng, giá tốt nhất với nhiều deal hot. Cam kết bảo hành
-                                    đến giọt cuối cùng..
+                                    Đến với The Perfume, bạn thoải mái tìm kiếm và trải nghiệm rất nhiều nhãn hiệu nổi
+                                    tiếng, từ cao cấp cho tới bình dân. Tới Với chúng tôi để thoả sức trải nghiệm dịch
+                                    vụ, xịt thử và lựa chọn cho mình một mùi hương ưng ý. The Perfume tự hào là trung
+                                    tâm nước hoa hàng đầu, với gần 20 năm trong ngành xa xỉ phẩm này. Chất lượng đảm
+                                    bảo, hàng chính hãng, giá tốt nhất với nhiều deal hot. Cam kết bảo hành đến giọt
+                                    cuối cùng..
                                 </p>
                             </div>
                         </div>
