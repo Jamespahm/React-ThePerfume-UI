@@ -115,7 +115,7 @@ const USER_MENU = [
     },
 ];
 function Header() {
-    const currentUser = false;
+    const currentUser = true;
 
     return (
         <header className={cx('header')}>
@@ -192,10 +192,10 @@ function Header() {
                             <Link to="#">
                                 <FiSearch />
                             </Link>
-                            <Link to="/user/favourite">
+                            <Link to={config.cart}>
                                 <MdFavoriteBorder />
                             </Link>
-                            <Link to="/user/shopping-cart">
+                            <Link to={config.cart}>
                                 <MdOutlineShoppingBag />
                             </Link>
                             {/*  */}
