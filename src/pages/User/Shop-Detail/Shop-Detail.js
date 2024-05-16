@@ -1,9 +1,11 @@
-import { useState } from 'react';
-
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
+import CurrencyFormat from 'react-currency-format';
+
+import config from '~/config/userRoutes';
+import request from '~/utils/request';
 import styles from './Shop-Detail.module.scss';
-import { Link } from 'react-router-dom';
-import config from '~/config/routes';
 
 import { IoStar, IoStarOutline, IoStarHalf } from 'react-icons/io5';
 import { FaExchangeAlt, FaHeart } from 'react-icons/fa';
@@ -12,15 +14,67 @@ const cx = classNames.bind(styles);
 
 function ShopDetail() {
     const [activeTab, setActiveTab] = useState('tabs-1');
+    const navigate = useNavigate();
 
     const handleTabClick = (tabId) => {
         setActiveTab(tabId);
     };
 
     const [quantity, setQuantity] = useState('1'); // Khởi tạo state cho giá trị quantity
-
     const handleQuantityChange = (event) => {
         setQuantity(event.target.value); // Cập nhật giá trị quantity khi có sự thay đổi
+    };
+
+    const { slug } = useParams();
+    const [result, setResult] = useState();
+
+    useEffect(() => {
+        request
+            .get(`perfume/${slug}`)
+            .then((res) => {
+                console.log('L2:', res);
+                setResult(res.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+    }, [slug]);
+
+    // Kiểm tra xem result có tồn tại không trước khi render
+    if (!result) {
+        return console.log();
+    }
+
+    console.log('L3:', result);
+
+    const addToCart = (idNH, soLuong) => {
+        const tokenUser = localStorage.getItem('tokenUser'); // Lấy tokenUser từ localStorage
+
+        // Dữ liệu cần gửi đi
+        const data = {
+            productId: idNH,
+            quantity: soLuong,
+        };
+
+        // Cấu hình các thông số của yêu cầu POST
+        const config = {
+            headers: {
+                Authorization: `Bearer ${tokenUser}`, // Thêm token vào header Authorization
+            },
+        };
+
+        // Gửi yêu cầu POST đến endpoint /cart/add
+        request
+            .post('/cart/add', data, config)
+            .then((response) => {
+                // Xử lý kết quả từ server (nếu cần)
+                console.log(response.data.message);
+                navigate('/cart');
+            })
+            .catch((error) => {
+                // Xử lý lỗi (nếu có)
+                console.error('Error:', error);
+            });
     };
     return (
         <>
@@ -56,7 +110,7 @@ function ShopDetail() {
                                             >
                                                 <div className={cx('product__thumb__pic', 'set-bg')}>
                                                     <img
-                                                        src={require('~/assets/img/product/Gucci/Four Homme EDT/po1.jpg')}
+                                                        src={require(`/src/assets/img/product/${result.hinhanh1}`)}
                                                         alt=""
                                                     />
                                                 </div>
@@ -70,7 +124,7 @@ function ShopDetail() {
                                             >
                                                 <div className={cx('product__thumb__pic', 'set-bg')}>
                                                     <img
-                                                        src={require('~/assets/img/product/Gucci/Four Homme EDT/po2.jpg')}
+                                                        src={require(`/src/assets/img/product/${result.hinhanh2}`)}
                                                         alt=""
                                                     />
                                                 </div>
@@ -84,7 +138,7 @@ function ShopDetail() {
                                             >
                                                 <div className={cx('product__thumb__pic', 'set-bg')}>
                                                     <img
-                                                        src={require('~/assets/img/product/Gucci/Four Homme EDT/po3.jpg')}
+                                                        src={require(`/src/assets/img/product/${result.hinhanh3}`)}
                                                         alt=""
                                                     />
                                                 </div>
@@ -98,7 +152,7 @@ function ShopDetail() {
                                             >
                                                 <div className={cx('product__thumb__pic', 'set-bg')}>
                                                     <img
-                                                        src={require('~/assets/img/product/Gucci/Four Homme EDT/po4.jpg')}
+                                                        src={require(`/src/assets/img/product/${result.hinhanh4}`)}
                                                         alt=""
                                                     />
                                                     <i className={cx('fa fa-play')}></i>
@@ -113,7 +167,7 @@ function ShopDetail() {
                                         <div className={`tab-pane ${activeTab === 'tabs-1' ? 'active' : ''}`}>
                                             <div className={cx('product__details__pic__item')}>
                                                 <img
-                                                    src={require('~/assets/img/product/Gucci/Four Homme EDT/po1.jpg')}
+                                                    src={require(`/src/assets/img/product/${result.hinhanh1}`)}
                                                     alt=""
                                                 />
                                             </div>
@@ -121,7 +175,7 @@ function ShopDetail() {
                                         <div className={`tab-pane ${activeTab === 'tabs-2' ? 'active' : ''}`}>
                                             <div className={cx('product__details__pic__item')}>
                                                 <img
-                                                    src={require('~/assets/img/product/Gucci/Four Homme EDT/po2.jpg')}
+                                                    src={require(`/src/assets/img/product/${result.hinhanh2}`)}
                                                     alt=""
                                                 />
                                             </div>
@@ -129,7 +183,7 @@ function ShopDetail() {
                                         <div className={`tab-pane ${activeTab === 'tabs-3' ? 'active' : ''}`}>
                                             <div className={cx('product__details__pic__item')}>
                                                 <img
-                                                    src={require('~/assets/img/product/Gucci/Four Homme EDT/po3.jpg')}
+                                                    src={require(`/src/assets/img/product/${result.hinhanh3}`)}
                                                     alt=""
                                                 />
                                             </div>
@@ -137,7 +191,7 @@ function ShopDetail() {
                                         <div className={`tab-pane ${activeTab === 'tabs-4' ? 'active' : ''}`}>
                                             <div className={cx('product__details__pic__item')}>
                                                 <img
-                                                    src={require('~/assets/img/product/Gucci/Four Homme EDT/po4.jpg')}
+                                                    src={require(`/src/assets/img/product/${result.hinhanh4}`)}
                                                     alt=""
                                                 />
                                             </div>
@@ -152,7 +206,7 @@ function ShopDetail() {
                             <div className={cx('row', 'd-flex', 'justify-content-center')}>
                                 <div className={cx('col-lg-8')}>
                                     <div className={cx('product__details__text')}>
-                                        <h4> Gucci Four Home Eau Dea Toile (Limited)</h4>
+                                        <h3> {result.tenNH}(Limited)</h3>
                                         <div className={cx('rating')}>
                                             <IoStar />
                                             <IoStar />
@@ -161,9 +215,15 @@ function ShopDetail() {
                                             <IoStarOutline />
                                             <span> - 50 Reviews</span>
                                         </div>
-                                        <h3>
-                                            4.500.000đ <span> 6.000.000đ</span>
-                                        </h3>
+                                        <div className={cx('product__details__price')}>
+                                            <CurrencyFormat
+                                                value={result.giaban}
+                                                displayType={'text'}
+                                                thousandSeparator={true}
+                                                suffix={' VND'}
+                                            />
+                                            <p> 6,000,000 VND</p>
+                                        </div>
                                         <p>
                                             Coat with quilted lining and an adjustable hood. Featuring long sleeves with
                                             adjustable cuff tabs, adjustable asymmetric hem with elastic side tabs and a
@@ -195,16 +255,20 @@ function ShopDetail() {
                                                 <div className={cx('pro-qty')}>
                                                     {/* Input được kết nối với state quantity thông qua thuộc tính value và hàm xử lý onChange */}
                                                     <input
+                                                        id="quantity"
                                                         type="text"
                                                         value={quantity}
                                                         onChange={handleQuantityChange}
                                                     />
                                                 </div>
                                             </div>
-                                            <Link to="/user/shopping-cart" className={cx('primary-btn', 'mr-4')}>
+                                            <button
+                                                onClick={() => addToCart(result.idNH, 1)}
+                                                className={cx('primary-btn', 'mr-4')}
+                                            >
                                                 Thêm Giỏ Hàng
-                                            </Link>
-                                            <Link to="/user/checkout" className={cx('primary-btn')}>
+                                            </button>
+                                            <Link to="/checkout" className={cx('primary-btn')}>
                                                 Đặt Hàng
                                             </Link>
                                         </div>
@@ -383,8 +447,7 @@ function ShopDetail() {
                     </div>
                 </div>
             </section>
-
-            {/* //////////// */}
+            ;{/* //////////// */}
             <section className={cx('related', 'spad')}>
                 <div className={cx('container')}>
                     <div className={cx('row')}>
@@ -407,7 +470,7 @@ function ShopDetail() {
                             <div className={cx('product__item', 'sale')}>
                                 <div className={cx('product__item__pic', 'set-bg')}>
                                     <img src={require('~/assets/img/product/Dior/Sauvage EDT/sa1.jpg')} alt="" />
-                                    <span className={cx('label')}>Sale</span>
+                                    <span className={cx('label')}>Sales</span>
                                     <ul className={cx('product__hover')}>
                                         <li>
                                             <Link to="#">
@@ -537,8 +600,8 @@ function ShopDetail() {
                     </div>
                 </div>
             </section>
+            ;
         </>
     );
 }
-
 export default ShopDetail;

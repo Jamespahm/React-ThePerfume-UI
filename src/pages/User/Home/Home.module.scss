@@ -143,14 +143,14 @@
 
     span {
         display: block;
-        font-size: 15px;
+        font-size: 14px;
         color: var(--white-color);
-        margin-bottom: 4px;
+        margin-bottom: 5px;
     }
 
-    h5 {
+    h6 {
         color: var(--white-color);
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 700;
     }
 }
@@ -412,21 +412,29 @@
     }
 
     h6 {
+        // height: 40px;
+        line-height: 1.4;
         color: var(--heading-color);
         font-size: 15px;
         font-weight: 600;
-        margin-bottom: 5px;
         transition: transform 0.3s; /* Sử dụng transition cho transform */
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /*  */
+    }
+    .quantity {
+        margin: 0;
+        // font-weight: 600;
     }
 
-    .rating {
-        margin-bottom: 6px;
+    // .rating {
+    //     // margin-bottom: 6px;
 
-        i {
-            font-size: 14px;
-            color: #b7b7b7;
-        }
-    }
+    //     i {
+    //         font-size: 14px;
+    //         color: #b7b7b7;
+    //     }
+    // }
 
     h5 {
         color: #0d0d0d;

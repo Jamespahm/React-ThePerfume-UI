@@ -24,10 +24,13 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
                 <MenuItem
                     key={index}
                     data={item}
-                    onClick={() => {
+                    onLanguage={() => {
                         if (isParent) {
                             setHistory((prev) => [...prev, item.children]);
                         } else {
+                            if (item.onLogout) {
+                                item.onLogout();
+                            }
                             onChange(item);
                         }
                     }}
@@ -35,9 +38,11 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
             );
         });
     };
+
     const handleBack = () => {
         setHistory((prev) => prev.slice(0, prev.length - 1));
     };
+
     const renderResult = (attrs) => (
         <div className={cx('menu-list')} tabIndex="-1" {...attrs}>
             <PopperWrapper>
@@ -55,7 +60,7 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
     return (
         <Tippy
             delay={[0, 500]}
-            offset={[0, 22]} // căn chỉnh vi trí
+            offset={[0, 22]} // căn chỉnh vị trí
             interactive
             // visible
             hideOnClick={hideOnClick}
@@ -67,10 +72,12 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
         </Tippy>
     );
 }
+
 Menu.propTypes = {
     children: PropTypes.node.isRequired,
     items: PropTypes.array,
     hideOnClick: PropTypes.bool,
     onChange: PropTypes.func,
 };
+
 export default Menu;

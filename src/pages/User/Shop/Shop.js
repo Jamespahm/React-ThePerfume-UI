@@ -1,54 +1,143 @@
 import { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames/bind';
-import styles from './Shop.module.scss';
 import { Link } from 'react-router-dom';
-import config from '~/config/routes';
-
 import { IoSearch, IoChevronDownSharp, IoChevronForwardSharp } from 'react-icons/io5';
 import { FaCircleXmark } from 'react-icons/fa6';
+
+import request from '~/utils/request';
+import styles from './Shop.module.scss';
+import config from '~/config/userRoutes';
 import ProductItem from '~/components/ProductItem/ProductItem';
 
 const cx = classNames.bind(styles);
 
 function Shop() {
     const [searchValue, setSearchValue] = useState('');
+
+    const [result, setResult] = useState([]);
+    const [priceRange, setPriceRange] = useState('');
+    const [categoryId, setCategoryId] = useState('');
+    const [brandId, setBrandId] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const itemsPerPage = 9; // Số lượng mục trên mỗi trang
+    const sl = 0;
+
     const inputRef = useRef();
 
+    const handleSearchChange = (event) => {
+        setSearchValue(event.target.value);
+        setCurrentPage(1); // Đặt lại trang hiện tại về 1 khi thực hiện tìm kiếm mới
+    };
     const handleClear = () => {
         setSearchValue('');
         inputRef.current.focus();
+        setCurrentPage(1); // Đặt lại trang hiện tại về 1 khi xóa tìm kiếm
     };
 
-    const [result, setResult] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPerfumes = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/perfume`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                let res;
+                const params = {
+                    page: currentPage,
+                    limit: itemsPerPage,
+                    sl,
+                };
+
+                if (priceRange) {
+                    const [minPrice, maxPrice] = priceRange.split('-');
+                    params.minPrice = minPrice;
+                    params.maxPrice = maxPrice;
                 }
-                const data = await response.json();
-                console.log(data);
-                setResult(data);
+                if (categoryId) {
+                    params.categoryId = categoryId;
+                }
+                if (brandId) {
+                    params.brandId = brandId;
+                }
+                if (searchValue === '') {
+                    res = await request.get('perfume', { params });
+                    setResult(res.data.products);
+                    setTotalPages(res.data.totalPages);
+                }
             } catch (error) {
-                setError(error);
-            } finally {
-                setLoading(false);
+                console.log('error', error);
             }
         };
 
-        fetchData();
-    }, []);
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+        fetchPerfumes();
+    }, [searchValue, categoryId, brandId, priceRange, currentPage]);
+    useEffect(() => {
+        if (searchValue === '') {
+            return;
+        }
+        const fetchSearchResults = async () => {
+            try {
+                const params = {
+                    q: searchValue,
+                    page: currentPage,
+                    limit: itemsPerPage,
+                    sl,
+                };
+                const res = await request.get('/perfume/search', { params });
+                setResult(res.data.products);
+                setTotalPages(res.data.totalPages);
+            } catch (error) {
+                console.log('error', error);
+            }
+        };
+        fetchSearchResults();
+    }, [searchValue, currentPage]);
 
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
+    const handlePriceRangeChange = (value) => {
+        setSearchValue('');
+        setPriceRange(value);
+        setCurrentPage(1); // Reset to the first page
+    };
+
+    const handleCategoryClick = (value) => {
+        setSearchValue('');
+        handlePriceRangeChange('');
+        setBrandId('');
+        setCategoryId(value);
+        setCurrentPage(1); // Reset to the first page
+    };
+
+    const handleBrandClick = (value) => {
+        setSearchValue('');
+        handlePriceRangeChange('');
+        setCategoryId('');
+        setBrandId(value);
+        setCurrentPage(1); // Reset to the first page
+    };
+
+    const handlePageClick = (page) => {
+        setCurrentPage(page);
+    };
+
+    //Lấy ra loại và thương hiệu
+    const [category, setCategory] = useState([]);
+    const [brand, setBrand] = useState([]);
+
+    useEffect(() => {
+        request
+            .get('category')
+            .then((res) => {
+                setCategory(res.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+        request
+            .get('brand')
+            .then((response) => {
+                setBrand(response.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
 
     return (
         <>
@@ -70,6 +159,7 @@ function Shop() {
                     </div>
                 </div>
             </section>
+
             <section className={cx('shop', 'spad')}>
                 <div className={cx('container')}>
                     <div className={cx('row')}>
@@ -79,31 +169,25 @@ function Shop() {
                                     <form action="#">
                                         <input
                                             id="shop-sidebar-search"
-                                            name="q"
                                             autoComplete="off"
                                             placeholder="Search..."
                                             ref={inputRef}
                                             value={searchValue}
                                             spellCheck={false}
-                                            onChange={(e) => {
-                                                setSearchValue(e.target.value.trimStart());
-                                            }}
+                                            onChange={handleSearchChange}
                                         />
                                         {!!searchValue && (
                                             <button className={cx('search__clear')} onClick={handleClear}>
                                                 <FaCircleXmark />
                                             </button>
                                         )}
-
                                         <button
                                             className={cx('search__search')}
-                                            htmlFor="shop-sidebar-search"
-                                            // type="submit"
-                                            onMouseDown={(e) => e.preventDefault()}
+                                            onClick={(e) => {
+                                                e.preventDefault(); // Ngăn chặn hành vi mặc định của nút
+                                            }}
                                         >
-                                            <span className={cx('icon_search')}>
-                                                <IoSearch />
-                                            </span>
+                                            <IoSearch />
                                         </button>
                                     </form>
                                 </div>
@@ -126,11 +210,16 @@ function Shop() {
                                                 <div className={cx('card-body')}>
                                                     <div className={cx('shop__sidebar__categories')}>
                                                         <ul className={cx('')}>
-                                                            <li>
-                                                                <Link to="">Tên loại</Link>
-                                                            </li>
-                                                            <li>
-                                                                <Link to="">Tất cả nước hoa (99+)</Link>
+                                                            {category.map((item) => (
+                                                                <li
+                                                                    key={item.idL}
+                                                                    onClick={() => handleCategoryClick(item.idL)}
+                                                                >
+                                                                    {item.tenL}
+                                                                </li>
+                                                            ))}
+                                                            <li onClick={() => handleCategoryClick()}>
+                                                                Tất cả nước hoa (99+)
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -153,9 +242,17 @@ function Shop() {
                                             >
                                                 <div className={cx('card-body')}>
                                                     <div className={cx('shop__sidebar__brand')}>
-                                                        <ul>
-                                                            <li>
-                                                                <Link to="">hhh</Link>
+                                                        <ul className={cx('')}>
+                                                            {brand.map((item) => (
+                                                                <li
+                                                                    key={item.idTH}
+                                                                    onClick={() => handleBrandClick(item.idTH)}
+                                                                >
+                                                                    {item.tenTH}
+                                                                </li>
+                                                            ))}
+                                                            <li onClick={() => handleBrandClick()}>
+                                                                Tất cả nước hoa (99+)
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -179,17 +276,29 @@ function Shop() {
                                                 <div className={cx('card-body')}>
                                                     <div className={cx('shop__sidebar__price')}>
                                                         <ul>
-                                                            <li>
-                                                                <Link to="#">$0.00 - $100.00</Link>
+                                                            <li onClick={() => handlePriceRangeChange('0 - 2000000')}>
+                                                                0 - 2.000.000
                                                             </li>
-                                                            <li>
-                                                                <Link to="#">$100.00 - $200.00</Link>
+                                                            <li
+                                                                onClick={() =>
+                                                                    handlePriceRangeChange('2000000 - 4000000')
+                                                                }
+                                                            >
+                                                                2.000.000 - 4.000.000
                                                             </li>
-                                                            <li>
-                                                                <Link to="#">$200.00 - $500.00</Link>
+                                                            <li
+                                                                onClick={() =>
+                                                                    handlePriceRangeChange('4000000 - 6000000')
+                                                                }
+                                                            >
+                                                                4.000.000 - 6.000.000
                                                             </li>
-                                                            <li>
-                                                                <Link to="#">500.00+</Link>
+                                                            <li
+                                                                onClick={() =>
+                                                                    handlePriceRangeChange('6000000 - 999999999')
+                                                                }
+                                                            >
+                                                                6.000.000 +
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -275,12 +384,13 @@ function Shop() {
                                     </div>
                                     <div className={cx('col-lg-6', 'col-md-6', 'col-sm-6')}>
                                         <div className={cx('shop__product__option__right')}>
-                                            <p>Sắp xếp theo giá</p>
-                                            <select id="sort">
-                                                <option value=""> Thấp đến cao</option>
-                                                <option value=""> 0 - 2.000.000</option>
-                                                <option value=""> 2.000.000 - 5.000.000</option>
-                                                <option value=""> 5.000.000 +</option>
+                                            <p>Giá</p>
+                                            <select id="sort" onChange={(e) => handlePriceRangeChange(e.target.value)}>
+                                                <option value="">Tất cả</option>
+                                                <option value="0-2000000"> 0 - 2.000.000</option>
+                                                <option value="2000000-4000000"> 2.000.000 - 4.000.000</option>
+                                                <option value="4000000-6000000">4.000.000 - 6.000.000</option>
+                                                <option value="6000000-999999999">6.000.000 +</option>
                                             </select>
                                         </div>
                                     </div>
@@ -288,20 +398,23 @@ function Shop() {
                             </div>
                             <div className={cx('row')}>
                                 {result.map((item) => (
-                                    <ProductItem key={item.ID} data={item} />
+                                    <ProductItem key={item.idNH} data={item} />
                                 ))}
                             </div>
 
                             <div className={cx('row')}>
                                 <div className={cx('col-lg-12')}>
                                     <div className={cx('product__pagination')}>
-                                        <Link className={cx('active')} to="#">
-                                            1
-                                        </Link>
-                                        <Link to="#">2</Link>
-                                        <Link to="#">3</Link>
-                                        <span>...</span>
-                                        <Link to="#">21</Link>
+                                        {[...Array(totalPages)].map((_, index) => (
+                                            <Link
+                                                key={index}
+                                                className={cx({ active: index + 1 === currentPage })}
+                                                to="#"
+                                                onClick={() => handlePageClick(index + 1)}
+                                            >
+                                                {index + 1}
+                                            </Link>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

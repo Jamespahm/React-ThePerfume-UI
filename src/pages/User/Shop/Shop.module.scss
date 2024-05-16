@@ -63,7 +63,7 @@
         }
 
         .search__search {
-            color: #4c4c4c;
+            color: #5a5a5a;
             font-size: 16px;
             border: none;
             background: transparent;
@@ -72,6 +72,9 @@
             padding: 0 15px;
             top: 0;
             height: 90%;
+        }
+        input:not(:placeholder-shown) ~ .search__search {
+            color: #000000;
         }
         .search__clear {
             color: #cecece;
@@ -135,17 +138,14 @@
 
         li {
             list-style: none;
-
-            a {
-                color: #b7b7b7;
-                font-size: 15px;
-                line-height: 32px;
-                text-decoration: none;
-                transition: right 0.3s ease; /* Thêm transition cho thuộc tính right */
-
-                &:hover {
-                    color: var(--heading-color);
-                }
+            color: #b7b7b7;
+            font-size: 15px;
+            line-height: 32px;
+            text-decoration: none;
+            transition: right 0.3s ease; /* Thêm transition cho thuộc tính right */
+            &:hover {
+                cursor: pointer;
+                color: var(--heading-color);
             }
         }
     }
@@ -337,36 +337,37 @@
 .product__pagination {
     padding-top: 25px;
     text-align: center;
+}
 
-    a {
-        display: inline-block;
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--heading-color);
-        height: 30px;
-        width: 30px;
-        border: 1px solid transparent;
-        border-radius: 50%;
-        line-height: 30px;
-        text-align: center;
+.product__pagination a,
+.product__pagination span {
+    display: inline-flex; /* Sử dụng flexbox để căn giữa nội dung */
+    align-items: center; /* Căn dọc nội dung theo trục y */
+    justify-content: center; /* Căn ngang nội dung theo trục x */
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--heading-color);
+    text-decoration: none;
+    transition: all 0.3s ease; /* Thêm hiệu ứng chuyển đổi mượt mà */
+    margin: 0 5px; /* Thêm khoảng cách giữa các liên kết phân trang */
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
 
-        &.active {
-            border-color: var(--heading-color);
-        }
+.product__pagination a {
+    border: 1px solid transparent;
+    line-height: 30px;
+}
 
-        &:hover {
-            border-color: var(--heading-color);
-        }
-    }
+.product__pagination a:hover,
+.product__pagination a.active {
+    border-color: var(--heading-color);
+}
 
-    span {
-        display: inline-block;
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--heading-color);
-        padding-left: 10px;
-        padding-right: 15px;
-    }
+.product__pagination a:hover,
+.product__pagination span:hover {
+    color: var(--link-hover-color); /* Màu khi di chuột qua */
 }
 
 /*---------------------

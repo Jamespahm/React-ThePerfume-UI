@@ -1,5 +1,5 @@
-import classNames from 'classnames/bind';
 import style from './Contact.module.scss';
+import classNames from 'classnames/bind';
 import Iframe from 'react-iframe';
 
 const cx = classNames.bind(style);
@@ -12,7 +12,7 @@ function Contact() {
                     url="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7452.490700335217!2d106.061781!3d20.94266!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135a30555555555%3A0x39a8acd006ab8e69!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBTxrAgUGjhuqFtIEvhu7kgVGh14bqtdCBIxrBuZyBZw6puLCBDxqEgc-G7nyAy!5e0!3m2!1svi!2s!4v1712814850135!5m2!1svi!2s"
                     height="500"
                     loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
+                    referrerPolicy="no-referrer-when-downgrade"
                     allowfullscreen=""
                     aria-hidden="false"
                     tabindex="0"
@@ -55,13 +55,13 @@ function Contact() {
                                 <form action="#">
                                     <div className={cx('row')}>
                                         <div className={cx('col-lg-6')}>
-                                            <input type="text" placeholder="Họ và Tên" />
+                                            <input name="name" type="text" autoComplete="off" placeholder="Họ và Tên" />
                                         </div>
                                         <div className={cx('col-lg-6')}>
-                                            <input type="text" placeholder="Email" />
+                                            <input name="email" type="text" autoComplete="off" placeholder="Email" />
                                         </div>
                                         <div className={cx('col-lg-12')}>
-                                            <textarea placeholder="Nội Dung"></textarea>
+                                            <textarea name="content" placeholder="Nội Dung"></textarea>
                                             <button type="submit" className={cx('site-btn')}>
                                                 Gửi Tin Nhắn
                                             </button>

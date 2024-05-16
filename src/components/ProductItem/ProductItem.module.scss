@@ -14,7 +14,7 @@
     .product__item__text {
         .rating {
             color: #f7941d;
-
+            margin-bottom: 5px;
             &:nth-last-child(1) {
                 color: #b7b7b7;
             }
@@ -84,7 +84,8 @@
                 padding: 4px 10px;
                 font-size: 12px;
                 position: absolute;
-                left: -80px;
+                right: 50px;
+                white-space: nowrap;
                 top: 5px;
                 z-index: 1;
                 opacity: 0;
@@ -130,11 +131,15 @@
     }
 
     h6 {
+        // height: 40px;
         color: var(--heading-color);
         font-size: 15px;
         font-weight: 600;
-        margin-bottom: 5px;
+        // margin-bottom: 5px;
         transition: transform 0.3s; /* Sử dụng transition cho transform */
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /*  */
     }
 
     h5 {
@@ -142,6 +147,10 @@
         font-weight: 700;
     }
 
+    .quantity {
+        margin: 0;
+        font-weight: 600;
+    }
     .product__color__select {
         position: absolute;
         right: 0;

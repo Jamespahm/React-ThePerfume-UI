@@ -1,7 +1,13 @@
+import logoHead from '~/assets/img/logo.png';
+import logoAdmin from '~/assets/img/logo2.png';
+import noImage from '~/assets/img/no-image.png';
+import payment from '~/assets/img/payment.png';
+
 const images = {
-    logoHead: require('~/assets/img/logo.png'),
-    noImage: require('~/assets/img/no-image.png'),
-    payment: require('~/assets/img/payment.png'),
-    productImg: require('~/assets/img/product/Gucci/Four Homme EDT/po1.jpg'),
+    logoHead,
+    logoAdmin,
+    noImage,
+    payment,
 };
+
 export default images;

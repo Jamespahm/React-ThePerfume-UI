@@ -1,23 +1,24 @@
 import { Link } from 'react-router-dom';
 
-import config from '~/config/routes';
+import config from '~/config/userRoutes';
 import classNames from 'classnames/bind';
 import style from './Header.module.scss';
 import images from '~/assets/img';
+import Image from '~/components/Image';
 
 import { MdFavoriteBorder, MdOutlineShoppingBag } from 'react-icons/md';
 import { IoLanguage, IoSettingsOutline, IoEllipsisVertical } from 'react-icons/io5';
 import { FaRegQuestionCircle, FaKeyboard } from 'react-icons/fa';
-import { TbLogout2 } from 'react-icons/tb';
-import { FiBookmark, FiSearch } from 'react-icons/fi';
-import { RiUserLine, RiLiveLine } from 'react-icons/ri';
+import { TbLogout2, TbLogin2, TbUserShield } from 'react-icons/tb';
+import { FiSearch } from 'react-icons/fi';
+import { RiUserLine } from 'react-icons/ri';
 import Menu from '~/components/Popper/Menu';
 
 const cx = classNames.bind(style);
 const MENU_ITEMS = [
     {
         icon: <IoLanguage />,
-        title: 'English',
+        title: 'Tiếng việt',
         children: {
             title: 'Language',
             data: [
@@ -75,48 +76,99 @@ const MENU_ITEMS = [
     },
     {
         icon: <FaRegQuestionCircle />,
-        title: 'Feedback & help',
+        title: 'Phản hồi & hỗ trợ',
         to: '/feedback',
     },
     {
         icon: <FaKeyboard />,
-        title: 'Keyboard & shortcuts',
+        title: 'Bàn phím & Lối tắt',
         to: '/',
     },
-];
-
-const USER_MENU = [
     {
-        icon: <RiUserLine />,
-        title: 'View profile',
-        to: '/feedback',
+        icon: <TbUserShield />,
+        title: 'Quản trị viên',
+        to: '/admin',
     },
     {
-        icon: <FiBookmark />,
-        title: 'Favourite',
-        to: '/favourite',
-    },
-    {
-        icon: <RiLiveLine />,
-        title: 'Live studio',
-        to: '/feedback',
-    },
-    {
-        icon: <IoSettingsOutline />,
-        title: 'Settings',
-        to: '/feedback',
-    },
-    ...MENU_ITEMS,
-    {
-        icon: <TbLogout2 />,
-        title: 'Log out',
-        to: '/logout',
+        icon: <TbLogin2 />,
+        title: 'Đăng nhập',
+        to: '/login',
         separate: true,
     },
 ];
-function Header() {
-    const currentUser = true;
+const handleLogout = () => {
+    // Thực hiện chức năng logout ở đây (xóa token từ localStorage, vv.)
+    localStorage.removeItem('tokenUser');
+    navigator('/');
+};
+const USER_MENU = [
+    {
+        icon: <RiUserLine />,
+        title: 'Hồ sơ',
+        to: '/myprofile',
+    },
+    {
+        icon: <RiUserLine />,
+        title: 'Đơn mua',
+        to: '/myorder',
+    },
+    {
+        icon: <IoLanguage />,
+        title: 'Tiếng việt',
+        children: {
+            title: 'Language',
+            data: [
+                {
+                    type: 'language',
+                    code: 'en',
+                    title: 'English',
+                },
+                {
+                    type: 'language',
+                    code: 'vi',
+                    title: 'Tiếng Việt',
+                },
+                {
+                    type: 'language',
+                    code: 'ja',
+                    title: '日本語',
+                },
+            ],
+        },
+    },
+    {
+        icon: <FaRegQuestionCircle />,
+        title: 'Phản hồi & hỗ trợ',
+        to: '/feedback',
+    },
+    {
+        icon: <FaKeyboard />,
+        title: 'Bàn phím & Phím tắt',
+        to: '/',
+    },
+    {
+        icon: <TbUserShield />,
+        title: 'Quản trị viên',
+        to: '/admin',
+    },
+    {
+        icon: <IoSettingsOutline />,
+        title: 'Cài đặt',
+        to: '/feedback',
+    },
 
+    {
+        icon: <TbLogout2 />,
+        title: 'Đăng xuất',
+        separate: true,
+        to: '/',
+        onLogout: handleLogout, // Truyền handleLogout vào onLogout
+    },
+];
+
+function Header() {
+    const currentUser = localStorage.getItem('tokenUser');
+    console.log('tokenUser : ', currentUser);
     return (
         <header className={cx('header')}>
             <div className={cx('header__top')}>
@@ -173,7 +225,7 @@ function Header() {
                                             <Link to={config.checkout}>Thanh Toán</Link>
                                         </li>
                                         <li>
-                                            <Link to={config.news}>CT Tin Tức</Link>
+                                            <Link to={config.favourite}>DS Yêu Thích</Link>
                                         </li>
                                     </ul>
                                 </li>
@@ -192,7 +244,7 @@ function Header() {
                             <Link to="#">
                                 <FiSearch />
                             </Link>
-                            <Link to={config.cart}>
+                            <Link to={config.favourite}>
                                 <MdFavoriteBorder />
                             </Link>
                             <Link to={config.cart}>
@@ -203,9 +255,9 @@ function Header() {
                                 <>
                                     <div className={cx('current-user')}>
                                         <Menu items={USER_MENU}>
-                                            <img
+                                            <Image
                                                 className={cx('avatar-btn')}
-                                                src="https://scontent.fhph2-1.fna.fbcdn.net/v/t39.30808-6/404494228_1100414251142275_2985755135866774625_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEK4alrqera-qGT85wvfbrcfYePbq_zSr19h49ur_NKvRaVpOh6ee6-O1tPguOawHOQ7jzuMv3r1zWdsdAoE_lz&_nc_ohc=SNI0Wiak-AgAb6bOrKo&_nc_ht=scontent.fhph2-1.fna&oh=00_AfAIqckNN3JKTMEiYsyG9BcTZE92q6IANwVrdx-D3ed4BA&oe=6617FB9F"
+                                                src={require('~/assets/img/avatar.png')}
                                                 alt=""
                                             />
                                         </Menu>

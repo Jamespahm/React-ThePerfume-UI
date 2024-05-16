@@ -1,3 +1,3 @@
 export function Image({ ...props }) {
-    return <img {...props} />;
+    return <img {...props} alt="" />;
 }

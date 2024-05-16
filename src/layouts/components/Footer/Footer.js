@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import config from '~/config/routes';
+import config from '~/config/userRoutes';
 import classNames from 'classnames/bind';
 import style from './Footer.module.scss';
 import images from '~/assets/img';

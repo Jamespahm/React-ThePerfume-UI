@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import style from './About.module.scss';
 
-import config from '~/config/routes';
+import config from '~/config/userRoutes';
 import { IoChevronForwardSharp } from 'react-icons/io5';
 
 const cx = classNames.bind(style);
