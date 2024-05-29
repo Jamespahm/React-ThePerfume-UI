@@ -62,7 +62,6 @@ body {
 
 .sidebar {
     width: 200px;
-    height: 100vh;
     background: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -73,14 +72,15 @@ body {
 
 .sidebar__profile-img {
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
+    width: 75px;
+    height: 75px;
     object-fit: cover;
 }
 
 .sidebar__username {
-    margin: 10px 0;
+    margin: 15px 0;
     font-size: 16px;
+    font-weight: 600;
 }
 
 .sidebar__menu {
@@ -352,14 +352,13 @@ h1 {
     margin-bottom: 10px;
 }
 
-.upload-button {
-    background-color: #fff;
-    color: #007bff;
-    border: 1px solid #007bff;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-}
+// .upload-button {
+//     background-color: #fff;
+//     color: #007bff;
+//     padding: 5px 10px;
+//     cursor: pointer;
+//     border-radius: 4px;
+// }
 
 .save-button {
     background-color: #ff4747;
@@ -375,15 +374,31 @@ h1 {
 }
 
 .form-right img {
-    width: 100px;
-    height: 100px;
+    width: 125px;
+    height: 125px;
     border-radius: 50%;
     margin-bottom: 10px;
 }
 
 .form-right .upload-button {
     display: block;
-    margin: 10px auto;
+    margin: 25px 0 10px;
+}
+.file-input {
+    display: none;
+}
+.upload-button {
+    display: inline-block;
+    padding: 6px;
+    border: 1px solid #000000;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.upload-button:hover {
+    background-color: #f1f1f1;
 }
 
 .form-right p {

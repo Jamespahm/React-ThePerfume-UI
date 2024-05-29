@@ -21,7 +21,7 @@ function FavItemProduct({ data, onDelete }) {
             <td className={cx('product__cart__item')}>
                 <Link to={`/shop-detail/${data.slug}`}>
                     <div className={cx('product__cart__item__pic')}>
-                        <img src={require(`/src/assets/img/product/${data.hinhanh1}`)} alt="" />
+                        <img src={`http://localhost:8080/img/products/${data.hinhanh1}`} alt="" />
                     </div>
                     <div className={cx('product__cart__item__text')}>
                         <h5>{data.tenNH}</h5>

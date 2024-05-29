@@ -34,7 +34,7 @@ function About() {
                     <div className={cx('row')}>
                         <div className={cx('col-lg-12')}>
                             <div className={cx('about__pic')}>
-                                <img src={require('~/assets/img/about/about-us.jpg')} alt="" />
+                                <img src={'http://localhost:8080/img/about/about-us.jpg'} alt="" />
                             </div>
                         </div>
                     </div>
@@ -82,7 +82,7 @@ function About() {
                                 </p>
                                 <div className={cx('testimonial__author')}>
                                     <div className={cx('testimonial__author__pic')}>
-                                        <img src={require('~/assets/img/about/testimonial-author.jpg')} alt="" />
+                                        <img src={'http://localhost:8080/img/about/testimonial-author.jpg'} alt="" />
                                     </div>
                                     <div className={cx('testimonial__author__text')}>
                                         <h5>Augusta Schultz</h5>
@@ -93,7 +93,7 @@ function About() {
                         </div>
                         <div className={cx('col-lg-6 p-0')}>
                             <div className={cx('testimonial__pic', 'set-bg')}>
-                                <img src={require('~/assets/img/about/testimonial-pic.jpg')} alt="" />
+                                <img src={'http://localhost:8080/img/about/testimonial-pic.jpg'} alt="" />
                             </div>
                         </div>
                     </div>
@@ -165,28 +165,28 @@ function About() {
                     <div className={cx('row')}>
                         <div className={cx('col-lg-3', 'col-md-6', 'col-sm-6')}>
                             <div className={cx('team__item')}>
-                                <img src={require('~/assets/img/about/team-1.jpg')} alt="" />
+                                <img src={'http://localhost:8080/img/about/team-1.jpg'} alt="" />
                                 <h4>John Smith</h4>
                                 <span>Fashion Design</span>
                             </div>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-6', 'col-sm-6')}>
                             <div className={cx('team__item')}>
-                                <img src={require('~/assets/img/about/team-2.jpg')} alt="" />
+                                <img src={'http://localhost:8080/img/about/team-2.jpg'} alt="" />
                                 <h4>Christine Wise</h4>
                                 <span>C.E.O</span>
                             </div>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-6', 'col-sm-6')}>
                             <div className={cx('team__item')}>
-                                <img src={require('~/assets/img/about/team-3.jpg')} alt="" />
+                                <img src={'http://localhost:8080/img/about/team-3.jpg'} alt="" />
                                 <h4>Sean Robbins</h4>
                                 <span>Manager</span>
                             </div>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-6', 'col-sm-6')}>
                             <div className={cx('team__item')}>
-                                <img src={require('~/assets/img/about/team-4.jpg')} alt="" />
+                                <img src={'http://localhost:8080/img/about/team-4.jpg'} alt="" />
                                 <h4>Lucy Myers</h4>
                                 <span>Delivery</span>
                             </div>
@@ -208,42 +208,42 @@ function About() {
                     <div className={cx('row')}>
                         <div className={cx('col-lg-3', 'col-md-4', 'col-sm-4', 'col-6')}>
                             <Link to="#" className={cx('client__item')}>
-                                <img src={require('~/assets/img/clients/client-1.png')} alt="" />
+                                <img src={'http://localhost:8080/img/clients/client-1.png'} alt="" />
                             </Link>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-4', 'col-sm-4', 'col-6')}>
                             <Link to="#" className={cx('client__item')}>
-                                <img src={require('~/assets/img/clients/client-2.png')} alt="" />
+                                <img src={'http://localhost:8080/img/clients/client-2.png'} alt="" />
                             </Link>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-4', 'col-sm-4', 'col-6')}>
                             <Link to="#" className={cx('client__item')}>
-                                <img src={require('~/assets/img/clients/client-3.png')} alt="" />
+                                <img src={'http://localhost:8080/img/clients/client-3.png'} alt="" />
                             </Link>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-4', 'col-sm-4', 'col-6')}>
                             <Link to="#" className={cx('client__item')}>
-                                <img src={require('~/assets/img/clients/client-4.png')} alt="" />
+                                <img src={'http://localhost:8080/img/clients/client-4.png'} alt="" />
                             </Link>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-4', 'col-sm-4', 'col-6')}>
                             <Link to="#" className={cx('client__item')}>
-                                <img src={require('~/assets/img/clients/client-5.png')} alt="" />
+                                <img src={'http://localhost:8080/img/clients/client-5.png'} alt="" />
                             </Link>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-4', 'col-sm-4', 'col-6')}>
                             <Link to="#" className={cx('client__item')}>
-                                <img src={require('~/assets/img/clients/client-6.png')} alt="" />
+                                <img src={'http://localhost:8080/img/clients/client-6.png'} alt="" />
                             </Link>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-4', 'col-sm-4', 'col-6')}>
                             <Link to="#" className={cx('client__item')}>
-                                <img src={require('~/assets/img/clients/client-7.png')} alt="" />
+                                <img src={'http://localhost:8080/img/clients/client-7.png'} alt="" />
                             </Link>
                         </div>
                         <div className={cx('col-lg-3', 'col-md-4', 'col-sm-4', 'col-6')}>
                             <Link to="#" className={cx('client__item')}>
-                                <img src={require('~/assets/img/clients/client-8.png')} alt="" />
+                                <img src={'http://localhost:8080/img/clients/client-8.png'} alt="" />
                             </Link>
                         </div>
                     </div>

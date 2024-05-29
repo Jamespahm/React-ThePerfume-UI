@@ -18,6 +18,7 @@ function Cart() {
     const [totalQuantity, setTotalQuantity] = useState(0);
     const navigator = useNavigate();
     const tokenUser = localStorage.getItem('tokenUser'); // Lấy tokenUser từ localStorage
+
     useEffect(() => {
         const fetchCartItems = async () => {
             try {
@@ -193,36 +194,38 @@ function Cart() {
                             </div>
                         </div>
                         <div className={cx('col-lg-4')}>
-                            <div className={cx('cart__discount')}>
-                                <h6>Nhập Mã Giảm Giá</h6>
-                                <form action="#">
-                                    <input type="text" name="magiamgia" placeholder="Nhập mã giảm giá" />
-                                    <button className={cx('primary-btn')} type="submit">
-                                        Áp Dụng
+                            <div className={cx('shopping__cart__detail')}>
+                                <div className={cx('cart__discount')}>
+                                    <h6>Nhập Mã Giảm Giá</h6>
+                                    <form action="#">
+                                        <input type="text" name="magiamgia" placeholder="Nhập mã giảm giá" />
+                                        <button className={cx('primary-btn')} type="submit">
+                                            Áp Dụng
+                                        </button>
+                                    </form>
+                                </div>
+                                <div className={cx('cart__total')}>
+                                    <h6>Tổng Cộng</h6>
+                                    <ul>
+                                        <li>
+                                            Số lượng <span>{totalQuantity}</span>
+                                        </li>
+                                        <li>
+                                            Tổng tiền{' '}
+                                            <span>
+                                                <CurrencyFormat
+                                                    value={totalAmount}
+                                                    displayType={'text'}
+                                                    thousandSeparator={true}
+                                                    suffix={' VND'}
+                                                />
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <button onClick={handleCheckout} className={cx('primary-btn')}>
+                                        Tiến Hành Thanh Toán
                                     </button>
-                                </form>
-                            </div>
-                            <div className={cx('cart__total')}>
-                                <h6>Tổng Cộng</h6>
-                                <ul>
-                                    <li>
-                                        Số lượng <span>{totalQuantity}</span>
-                                    </li>
-                                    <li>
-                                        Tổng tiền{' '}
-                                        <span>
-                                            <CurrencyFormat
-                                                value={totalAmount}
-                                                displayType={'text'}
-                                                thousandSeparator={true}
-                                                suffix={' VND'}
-                                            />
-                                        </span>
-                                    </li>
-                                </ul>
-                                <button onClick={handleCheckout} className={cx('primary-btn')}>
-                                    Tiến Hành Thanh Toán
-                                </button>
+                                </div>
                             </div>
                         </div>
                     </div>

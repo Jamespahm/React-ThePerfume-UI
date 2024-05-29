@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import request from '~/utils/request';
 import styles from '../Admin.module.scss';
 import classNames from 'classnames/bind';
-import { FaSortDown, FaSortUp, FaEye, FaRegEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaSortDown, FaSortUp, FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 import { IoSearch } from 'react-icons/io5';
 import { FaCircleXmark } from 'react-icons/fa6';
 
@@ -18,6 +18,7 @@ function QLKH() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 7; // Số lượng mục trên mỗi trang
+    const navigator = useNavigate();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -82,6 +83,27 @@ function QLKH() {
         setCurrentPage(page);
     };
 
+    const handleSoftDeleteItem = async (id) => {
+        try {
+            let text = 'Xóa khách hàng ?';
+            if (window.confirm(text) === true) {
+                await request.put(`/user/${id}/delete`);
+                // Sau khi xóa thành công, cập nhật lại danh sách khách hàng trong giỏ hàng
+                const updatedCartItems = users.filter((item) => item.idKH !== id);
+                setUser(updatedCartItems);
+            } else {
+                return; // Trả về khách hàng với số lượng = 1 nếu không xác nhận xóa
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+
+    const handleUpdateUser = (id) => {
+        // Chuyển hướng đến trang chi tiết hóa đơn và truyền id hóa đơn
+        navigator(`/admin/updateuser/${id}`);
+    };
+
     console.log('page: ', totalPages);
     console.log('users: ', users);
 
@@ -91,7 +113,13 @@ function QLKH() {
                 <div className="col-md-12">
                     <div className="card strpied-tabled-with-hover">
                         <div className={cx('card-header-table')}>
-                            <h4 className="card-title">Danh sách người dùng</h4>
+                            <h4 className={cx('card-title')}>Khách hàng</h4>
+                            <Link className={cx('card-link')} to={'/admin/createuser'}>
+                                Thêm mới
+                            </Link>
+                            <Link className={cx('card-link')} to={'/admin/trashuser'}>
+                                Thùng rác
+                            </Link>
                             <div className={cx('shop__sidebar__search')}>
                                 <form action="#">
                                     <input
@@ -107,7 +135,7 @@ function QLKH() {
                                         <button className={cx('search__clear')} onClick={handleClear}>
                                             <FaCircleXmark />
                                         </button>
-                                    )}
+                                    )}{' '}
                                     <button
                                         className={cx('search__search')}
                                         onClick={(e) => {
@@ -124,6 +152,8 @@ function QLKH() {
                             <table className="table table-hover table-striped">
                                 <thead>
                                     <tr>
+                                        <th scope="col">Hình ảnh</th>
+
                                         <th scope="col">
                                             Tên khách hàng
                                             <button className={cx('sort-btn')} onClick={handleSortButtonClick}>
@@ -140,19 +170,28 @@ function QLKH() {
                                 <tbody>
                                     {users.map((user) => (
                                         <tr key={user.idKH}>
+                                            <td>
+                                                <img src={`http://localhost:8080/img/user-avt/${user.avatar}`} alt="" />
+                                            </td>
                                             <td>{user.tenKH}</td>
                                             <td>{user.gioitinh}</td>
                                             <td>{user.sdt}</td>
                                             <td>{user.email}</td>
                                             <td>{user.matkhau}</td>
                                             <td>
-                                                <button className={cx('table-btn', '')}>
+                                                {/* <button className={cx('table-btn', '')}>
                                                     <FaEye />
-                                                </button>
-                                                <button className={cx('table-btn', '')}>
+                                                </button> */}
+                                                <button
+                                                    onClick={() => handleUpdateUser(user.idKH)}
+                                                    className={cx('table-btn', '')}
+                                                >
                                                     <FaRegEdit />
                                                 </button>
-                                                <button className={cx('table-btn', '')}>
+                                                <button
+                                                    onClick={() => handleSoftDeleteItem(user.idKH)}
+                                                    className={cx('table-btn', '')}
+                                                >
                                                     <FaTrashAlt />
                                                 </button>
                                             </td>

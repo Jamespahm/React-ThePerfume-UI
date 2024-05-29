@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 
 import request from '~/utils/request';
 import styles from '../Admin.module.scss';
-import { FaSortDown, FaSortUp, FaEye, FaRegEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaSortDown, FaSortUp, FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 import { IoSearch } from 'react-icons/io5';
 import { FaCircleXmark } from 'react-icons/fa6';
 
@@ -31,7 +31,8 @@ function QLHD() {
                     page: currentPage,
                     limit: 8,
                 };
-                if (searchValue.trim() === '') {
+
+                if (searchValue === '') {
                     res = await request.get('order', { params });
                     setOrders(res.data.orders);
                     setTotalPages(res.data.totalPages);
@@ -42,6 +43,7 @@ function QLHD() {
         };
         fetchOrders();
     }, [searchValue, sortOrder, currentPage]);
+
     useEffect(() => {
         if (searchValue === '') {
             return;
@@ -56,7 +58,7 @@ function QLHD() {
                     limit: itemsPerPage,
                 };
                 const res = await request.get('/order/search', { params });
-                setOrders(res.data.products);
+                setOrders(res.data.results);
                 setTotalPages(res.data.totalPages);
             } catch (error) {
                 console.log('error', error);
@@ -64,11 +66,11 @@ function QLHD() {
         };
         fetchSearchResults();
     }, [searchValue, sortOrder, currentPage]);
+
     const handleSearchChange = (event) => {
         setSearchValue(event.target.value);
         setCurrentPage(1); // Đặt lại trang hiện tại về 1 khi thực hiện tìm kiếm mới
     };
-
     const handleClear = () => {
         setSearchValue('');
         inputRef.current.focus();
@@ -77,22 +79,46 @@ function QLHD() {
     const handleSortButtonClick = () => {
         setSortOrder((prevSortOrder) => (prevSortOrder === 'asc' ? 'desc' : 'asc'));
     };
-
     const handlePageClick = (page) => {
         setCurrentPage(page);
     };
-    const handleViewDetail = (orderId) => {
+    const handleViewDetail = (id) => {
         // Chuyển hướng đến trang chi tiết hóa đơn và truyền id hóa đơn
-        navigator(`/admin/detailhd/${orderId}`);
+        navigator(`/admin/detailhd/${id}`);
     };
-
+    const handleUpdateOrder = (id) => {
+        // Chuyển hướng đến trang chi tiết hóa đơn và truyền id hóa đơn
+        navigator(`/admin/updateorder/${id}`);
+    };
+    const handleSoftDeleteItem = async (id) => {
+        try {
+            let text = 'Xóa hóa đơn ?';
+            if (window.confirm(text) === true) {
+                await request.put(`/order/${id}/delete`);
+                // Sau khi xóa thành công, cập nhật lại danh sách khách hàng trong giỏ hàng
+                const updatedCartItems = orders.filter((item) => item.idHD !== id);
+                setOrders(updatedCartItems);
+            } else {
+                return; // Trả về khách hàng với số lượng = 1 nếu không xác nhận xóa
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+    console.log(orders);
     return (
         <>
             <div className="row">
                 <div className="col-md-12">
                     <div className="card strpied-tabled-with-hover">
                         <div className={cx('card-header-table')}>
-                            <h4 className="card-title">Danh sách hóa đơn</h4>
+                            <h4 className={cx('card-title')}>Hóa đơn</h4>
+                            <Link className={cx('card-link')} to={'/admin/createorder'}>
+                                Thêm mới
+                            </Link>
+                            <Link className={cx('card-link')} to={'/admin/trashorder'}>
+                                Thùng rác
+                            </Link>
                             <div className={cx('shop__sidebar__search')}>
                                 <form action="#">
                                     <input
@@ -142,11 +168,11 @@ function QLHD() {
                                 </thead>
                                 <tbody>
                                     {orders.map((order, index) => (
-                                        <tr key={order.idHD} onClick={() => handleViewDetail(order.idHD)}>
-                                            <td>{order.tennhan}</td>
-                                            <td>{order.sdtnhan}</td>
-                                            <td>{order.diachinhan}</td>
-                                            <td>
+                                        <tr key={order.idHD}>
+                                            <td onClick={() => handleViewDetail(order.idHD)}>{order.tennhan}</td>
+                                            <td onClick={() => handleViewDetail(order.idHD)}>{order.sdtnhan}</td>
+                                            <td onClick={() => handleViewDetail(order.idHD)}>{order.diachinhan}</td>
+                                            <td onClick={() => handleViewDetail(order.idHD)}>
                                                 <CurrencyFormat
                                                     value={order.tongtien}
                                                     displayType={'text'}
@@ -154,20 +180,22 @@ function QLHD() {
                                                     suffix={''}
                                                 />
                                             </td>
-                                            <td>{moment(order.ngaydat).format('HH:mm:ss DD/MM/YYYY')}</td>
-                                            <td>{order.thanhtoan}</td>
-                                            <td>{order.trangthai}</td>
+                                            <td onClick={() => handleViewDetail(order.idHD)}>
+                                                {moment(order.ngaydat).format('HH:mm:ss DD/MM/YYYY')}
+                                            </td>
+                                            <td onClick={() => handleViewDetail(order.idHD)}>{order.thanhtoan}</td>
+                                            <td onClick={() => handleViewDetail(order.idHD)}>{order.trangthai}</td>
                                             <td>
                                                 <button
-                                                    onClick={() => handleViewDetail(order.idHD)}
+                                                    onClick={() => handleUpdateOrder(order.idHD)}
                                                     className={cx('table-btn', '')}
                                                 >
-                                                    <FaEye />
-                                                </button>
-                                                <button className={cx('table-btn', '')}>
                                                     <FaRegEdit />
                                                 </button>
-                                                <button className={cx('table-btn', '')}>
+                                                <button
+                                                    onClick={() => handleSoftDeleteItem(order.idHD)}
+                                                    className={cx('table-btn', '')}
+                                                >
                                                     <FaTrashAlt />
                                                 </button>
                                             </td>

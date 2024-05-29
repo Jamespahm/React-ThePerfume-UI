@@ -9,17 +9,25 @@ td:hover {
     cursor: pointer;
 }
 .card-header-table {
-    display: flex;
+    // display: flex;
     padding: 15px 15px 0;
-    justify-content: space-between;
+    // justify-content: space-between;
+    // align-items: baseline;
+}
+.card-title {
+    float: left;
+}
+.card-link {
+    float: left;
+    padding: 0 10px;
+    margin-left: 10px;
+    line-height: 2;
 }
 .shop__sidebar__search {
-    // margin-bottom: 10px; /* Khoảng cách từ phần tìm kiếm đến bảng */
     text-align: right; /* Căn phải */
-    display: flex;
+    float: right;
+    position: relative;
     form {
-        position: relative;
-
         input {
             width: 280px; /* Độ rộng của thanh tìm kiếm */
             font-size: 15px;
@@ -58,7 +66,9 @@ td:hover {
         }
     }
 }
-
+.img-preview {
+    width: 65%;
+}
 .product__pagination {
     padding-bottom: 30px;
     text-align: center;
@@ -111,4 +121,40 @@ td > img {
     background-color: transparent;
     margin: 10px;
     font-size: 18px;
+}
+/* src/custom.css */
+.form-create input,
+textarea,
+select {
+    height: 36px;
+    font-size: 16px !important;
+}
+.btn-add {
+    padding: 5px 20px !important;
+    font-size: 18px !important;
+    margin-top: 10px !important;
+}
+.file-input {
+    display: none;
+}
+.upload-button {
+    display: block;
+    padding: 5px 15px;
+    border: 1px solid #b9b9b9;
+    font-size: 16px;
+    // font-weight: 700;
+    color: #000000;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.upload-button:hover {
+    background-color: #dadada;
+}
+
+.state-select {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #c0c0c0;
+    padding: 0 10px;
+    background-color: #6e6e6e;
 }

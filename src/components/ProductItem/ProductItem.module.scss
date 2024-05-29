@@ -44,7 +44,10 @@
     // height: 260px;
     position: relative;
     background-position: center center;
-
+    > img {
+        height: 255px;
+        width: 255px;
+    }
     .label {
         color: rgb(0, 0, 0);
         font-size: 11px;

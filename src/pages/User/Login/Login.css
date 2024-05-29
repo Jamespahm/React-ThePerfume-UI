@@ -1,0 +1,363 @@
+/*--A Design by W3layouts 
+Author: W3layout
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+--*/
+
+/*--- reset code ---*/
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+dl,
+dt,
+dd,
+ol,
+nav ul,
+nav li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+ol,
+ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+blockquote,
+q {
+    quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* start editing from here */
+a {
+    text-decoration: none;
+}
+.txt-rt {
+    text-align: right;
+} /* text align right */
+.txt-lt {
+    text-align: left;
+} /* text align left */
+.txt-center {
+    text-align: center;
+    /*-- W3Layouts --*/
+} /* text align center */
+.float-rt {
+    float: right;
+} /* float right */
+.float-lt {
+    float: left;
+} /* float left */
+.clear {
+    clear: both;
+} /* clear float */
+.pos-relative {
+    position: relative;
+} /* Position Relative */
+.pos-absolute {
+    position: absolute;
+} /* Position Absolute */
+.vertical-base {
+    vertical-align: baseline;
+} /* vertical align baseline */
+.vertical-top {
+    vertical-align: top;
+} /* vertical align top */
+nav.vertical ul li {
+    display: block;
+} /* vertical menu */
+nav.horizontal ul li {
+    display: inline-block;
+} /* horizontal menu */
+img {
+    max-width: 100%;
+}
+
+/*--- end reset code ---*/
+
+.container-login {
+    background: url(/src/assets/img/image-banner.png) no-repeat;
+    /* backdrop-filter:; */
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    height: 100vh;
+}
+h1.w3ls {
+    font-size: 42px;
+    color: #fff;
+    padding: 20px 0 15px;
+    /* font-weight: 500; */
+    text-align: center;
+    /*-- w3layouts --*/
+    text-transform: uppercase;
+}
+.content-w3ls {
+    background-color: #3b414c;
+    width: 70%;
+    margin: 0 auto 50px;
+    padding: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.content-w3ls .content-agile1 {
+    width: 50%;
+    float: left;
+    background: url(/src/assets/img/image.png) no-repeat;
+    background-position: center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    height: 625px;
+}
+
+.content-w3ls .content-agile11 {
+    width: 50%;
+    float: left;
+    background: url(/src/assets/img/image.png) no-repeat;
+    background-position: center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    height: 550px;
+}
+
+h2.agileits1 {
+    font-size: 60px;
+    font-weight: bolder;
+    color: #000000;
+    text-align: Center;
+    text-transform: uppercase;
+    font-family: emoji;
+    text-shadow: 1px 1px 1px black;
+    margin-top: 200px;
+}
+.agileits2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+    text-transform: capitalize;
+    padding: 10px 0;
+}
+
+.agileits2:hover {
+    font-weight: bolder;
+    text-shadow: 0.5px 0.5px 1px black;
+}
+.content-w3ls .content-agile2 {
+    width: 50%;
+    float: left;
+    padding: 25px 0 0;
+    margin: auto;
+    margin-top: 100px;
+}
+
+.login-input {
+    width: 300px;
+    height: 50px;
+    padding: 0 15px;
+    color: #fff;
+    font-size: 17px !important;
+    font-weight: 200;
+    background-color: transparent;
+    /*-- w3layouts --*/
+    border-bottom: 5px solid #ffffff !important;
+    /* border-top-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent; */
+    font-family: 'Raleway', sans-serif;
+    margin: 20px auto !important;
+    display: block;
+    outline: none;
+}
+.login-input:focus,
+.login-input:hover {
+    color: #fff;
+    border-bottom: 5px solid #3970b0 !important;
+}
+
+.register {
+    width: 335px;
+    margin: 30px auto;
+    display: block;
+    height: 50px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: normal;
+    color: #fff;
+    background-color: #3970b0;
+    border-color: transparent;
+    font-family: 'Raleway', sans-serif;
+    /*-- w3ls --*/
+    transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    cursor: pointer;
+}
+.register:hover {
+    color: #fff;
+    background-color: #0f427b;
+}
+p.wthree {
+    font-size: 16px;
+    font-weight: normal;
+    color: #fff;
+    text-align: center;
+    text-transform: capitalize;
+    padding-bottom: 20px;
+}
+
+ul.social-agileinfo {
+    text-align: center;
+}
+ul.social-agileinfo li {
+    display: inline-block;
+    margin: 0;
+}
+ul.social-agileinfo li a i.fa {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #fff;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+}
+ul.social-agileinfo li a i.fa.fa-facebook:hover {
+    background-color: #3b5998;
+    color: #fff;
+    border-color: #3b5998;
+}
+ul.social-agileinfo li a i.fa.fa-twitter:hover {
+    background-color: #1da1f2;
+    color: #fff;
+    border-color: #1da1f2;
+}
+ul.social-agileinfo li a i.fa.fa-youtube:hover {
+    background-color: #cd201f;
+    color: #fff;
+    border-color: #cd201f;
+}
+ul.social-agileinfo li a i.fa.fa-google-plus:hover {
+    /*-- w3ls --*/
+    background-color: #dd4b39;
+    color: #fff;
+    border-color: #dd4b39;
+}
+ul.social-agileinfo li a i.fa:hover {
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    -moz-animation: spin 2s linear infinite;
+    -o-animation: spin 2s linear infinite;
+    -ms-animation: spin 2s linear infinite;
+}

@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import CurrencyFormat from 'react-currency-format';
 import request from '~/utils/request';
 import styles from '../Admin.module.scss';
 import classNames from 'classnames/bind';
-import CurrencyFormat from 'react-currency-format';
+
 const cx = classNames.bind(styles);
 
-const CreatePerfume = () => {
+function UpdatePerfume() {
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [perfume, setPerfume] = useState({
         tenNH: '',
         giaban: '',
         dungtich: '',
-        hinhanh1: null,
-        hinhanh2: null,
-        hinhanh3: null,
-        hinhanh4: null,
+        hinhanh1: '',
+        hinhanh2: '',
+        hinhanh3: '',
+        hinhanh4: '',
         soluong: '',
         mota: '',
         idTH: '',
@@ -27,7 +30,7 @@ const CreatePerfume = () => {
         hinhanh3: null,
         hinhanh4: null,
     });
-    const navigate = useNavigate();
+
     const [brands, setBrands] = useState([]);
     const [categories, setCategories] = useState([]);
 
@@ -45,87 +48,62 @@ const CreatePerfume = () => {
     }, []);
 
     useEffect(() => {
-        // Cleanup URLs when component unmounts or previews change
-        return () => {
-            Object.values(previewImages).forEach((url) => {
-                if (url) {
-                    URL.revokeObjectURL(url);
-                }
-            });
+        const fetchPerfume = async () => {
+            try {
+                const res = await request.get(`/perfume/get-once/${id}`);
+                setPerfume(res.data);
+                setPreviewImages({
+                    hinhanh1: res.data.hinhanh1 ? `http://localhost:8080/img/products/${res.data.hinhanh1}` : null,
+                    hinhanh2: res.data.hinhanh2 ? `http://localhost:8080/img/products/${res.data.hinhanh2}` : null,
+                    hinhanh3: res.data.hinhanh3 ? `http://localhost:8080/img/products/${res.data.hinhanh3}` : null,
+                    hinhanh4: res.data.hinhanh4 ? `http://localhost:8080/img/products/${res.data.hinhanh4}` : null,
+                });
+            } catch (error) {
+                console.log('Error fetching perfume:', error);
+            }
         };
-    }, [previewImages]);
+        fetchPerfume();
+    }, [id]);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         if (files) {
-            const file = files[0];
-            const previewUrl = URL.createObjectURL(file);
-
-            // Revoke previous URL if it exists
-            if (previewImages[name]) {
-                URL.revokeObjectURL(previewImages[name]);
-            }
-
-            setPerfume({
-                ...perfume,
-                [name]: file,
-            });
-            setPreviewImages({
-                ...previewImages,
-                [name]: previewUrl,
-            });
+            setPerfume((prev) => ({ ...prev, [name]: files[0] }));
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImages((prev) => ({ ...prev, [name]: reader.result }));
+            };
+            reader.readAsDataURL(files[0]);
         } else {
-            setPerfume({
-                ...perfume,
-                [name]: value,
-            });
+            setPerfume((prev) => ({ ...prev, [name]: value }));
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        Object.keys(perfume).forEach((key) => {
-            formData.append(key, perfume[key]);
-        });
-
-        request
-            .post('/perfume/add', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-            .then((response) => {
-                alert(response.data.message);
-                setPerfume({
-                    tenNH: '',
-                    giaban: '',
-                    dungtich: '',
-                    hinhanh1: null,
-                    hinhanh2: null,
-                    hinhanh3: null,
-                    hinhanh4: null,
-                    soluong: '',
-                    mota: '',
-                    idTH: '',
-                    idL: '',
-                });
-                setPreviewImages({
-                    hinhanh1: null,
-                    hinhanh2: null,
-                    hinhanh3: null,
-                    hinhanh4: null,
-                });
-                navigate('/admin/qlsp'); // Điều hướng về trang danh sách nước hoa sau khi cập nhật thành công
-            })
-            .catch((error) => {
-                console.error('There was an error adding the perfume!', error);
+        try {
+            const formData = new FormData();
+            Object.keys(perfume).forEach((key) => {
+                // Nếu key là hình ảnh và không có ảnh mới được chọn, gửi lại giá trị cũ
+                if (['hinhanh1', 'hinhanh2', 'hinhanh3', 'hinhanh4'].includes(key) && perfume[key] instanceof File) {
+                    formData.append(key, perfume[key]);
+                } else if (['hinhanh1', 'hinhanh2', 'hinhanh3', 'hinhanh4'].includes(key) && !perfume[key]) {
+                    formData.append(key, previewImages[key]); // Gửi lại giá trị của ảnh hiện có
+                } else {
+                    formData.append(key, perfume[key]);
+                }
             });
+
+            await request.put(`/perfume/${id}/update`, formData);
+            navigate('/admin/qlsp');
+        } catch (error) {
+            console.log('Error updating perfume:', error);
+        }
     };
 
     return (
         <div className={cx('container', 'form-create')}>
-            <h2>Thêm Nước Hoa Mới</h2>
+            <h2>Cập nhật nước hoa</h2>
 
             <form onSubmit={handleSubmit}>
                 <div className="row">
@@ -186,7 +164,6 @@ const CreatePerfume = () => {
                         />
                     </div>
                 </div>
-
                 <div className="row">
                     <div className="mb-3 col-md-6">
                         <label className={cx('form-label')}>Thương hiệu:</label>
@@ -223,59 +200,25 @@ const CreatePerfume = () => {
                         </select>
                     </div>
                 </div>
+
                 <div className="row mt-3">
-                    <div className="mb-3 col-md-3">
-                        <label className={cx('form-label')}>Hình ảnh 1 - Ảnh chính:</label>
-                        <input
-                            type="file"
-                            className={cx('form-control')}
-                            name="hinhanh1"
-                            onChange={handleChange}
-                            required
-                        />
-                        {previewImages.hinhanh1 && (
-                            <img src={previewImages.hinhanh1} alt="Preview" className={cx('img-preview')} />
-                        )}
-                    </div>
-                    <div className="mb-3 col-md-3">
-                        <label className={cx('form-label')}>Hình ảnh 2:</label>
-                        <input
-                            type="file"
-                            className={cx('form-control')}
-                            name="hinhanh2"
-                            onChange={handleChange}
-                            required
-                        />
-                        {previewImages.hinhanh2 && (
-                            <img src={previewImages.hinhanh2} alt="Preview" className={cx('img-preview')} />
-                        )}
-                    </div>
-                    <div className="mb-3 col-md-3">
-                        <label className={cx('form-label')}>Hình ảnh 3:</label>
-                        <input
-                            type="file"
-                            className={cx('form-control')}
-                            name="hinhanh3"
-                            onChange={handleChange}
-                            required
-                        />
-                        {previewImages.hinhanh3 && (
-                            <img src={previewImages.hinhanh3} alt="Preview" className={cx('img-preview')} />
-                        )}
-                    </div>
-                    <div className="mb-3 col-md-3">
-                        <label className={cx('form-label')}>Hình ảnh 4:</label>
-                        <input
-                            type="file"
-                            className={cx('form-control')}
-                            name="hinhanh4"
-                            onChange={handleChange}
-                            required
-                        />
-                        {previewImages.hinhanh4 && (
-                            <img src={previewImages.hinhanh4} alt="Preview" className={cx('img-preview')} />
-                        )}
-                    </div>
+                    {['hinhanh1', 'hinhanh2', 'hinhanh3', 'hinhanh4'].map((imageField, index) => (
+                        <div key={index} className="mb-3 col-md-3">
+                            <label htmlFor="file-input" className={cx('upload-button')}>
+                                Chọn ảnh
+                            </label>
+                            <input
+                                type="file"
+                                className={cx('file-input')}
+                                name={imageField}
+                                onChange={handleChange}
+                                id="file-input"
+                            />
+                            {previewImages[imageField] && (
+                                <img src={previewImages[imageField]} alt="Preview" className={cx('img-preview')} />
+                            )}
+                        </div>
+                    ))}
                 </div>
                 <div className="mb-3">
                     <label className={cx('form-label')}>Mô tả:</label>
@@ -287,15 +230,16 @@ const CreatePerfume = () => {
                         required
                     ></textarea>
                 </div>
+
                 <Link to={'/admin/qlsp'} className={cx('btn', 'btn-warning', 'btn-add')}>
                     Quay lại
                 </Link>
                 <button type="submit" className={cx('btn', 'btn-primary', 'btn-add', 'ml-3')}>
-                    Thêm Nước Hoa
+                    Cập nhật
                 </button>
             </form>
         </div>
     );
-};
+}
 
-export default CreatePerfume;
+export default UpdatePerfume;

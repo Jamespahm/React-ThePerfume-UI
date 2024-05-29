@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import CurrencyFormat from 'react-currency-format';
@@ -15,12 +15,14 @@ function Checkout() {
     const [sdtNhan, setSdtNhan] = useState('');
     const [diaChiNhan, setDiaChiNhan] = useState('');
     const [thanhToan, setThanhToan] = useState('');
+    const [user, setUser] = useState(null);
     const [message, setMessage] = useState('');
-    const tokenUser = localStorage.getItem('tokenUser'); // Giả sử token được lưu trữ trong localStorage
+    const tokenUser = localStorage.getItem('tokenUser');
     const location = useLocation();
-    const navigate = useNavigate(); // Khởi tạo useNavigate
+    const navigate = useNavigate();
 
-    const { cartItems, totalAmount, totalQuantity } = location.state || {
+    const { items, cartItems, totalAmount, totalQuantity } = location.state || {
+        items: null,
         cartItems: [],
         totalAmount: 0,
         totalQuantity: 0,
@@ -28,26 +30,75 @@ function Checkout() {
 
     const handleCheckout = async () => {
         try {
-            const response = await request.post(
-                '/payment/checkout',
-                {
-                    tenNhan,
-                    sdtNhan,
-                    diaChiNhan,
-                    thanhToan,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${tokenUser}`,
+            if (items.length > 0) {
+                const item = items[0];
+                await request.post(
+                    '/payment/checkoutSingle',
+                    {
+                        idNH: item.idNH,
+                        soLuong: item.soLuong,
+                        tenNhan,
+                        sdtNhan,
+                        diaChiNhan,
+                        thanhToan,
                     },
-                },
-            );
-            setMessage(response.data.message);
-            navigate('/');
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenUser}`,
+                        },
+                    },
+                );
+            } else {
+                await request.post(
+                    '/payment/checkout',
+                    {
+                        tenNhan,
+                        sdtNhan,
+                        diaChiNhan,
+                        thanhToan,
+                        cartItems,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenUser}`,
+                        },
+                    },
+                );
+            }
+
+            navigate('/myorder');
         } catch (error) {
             setMessage(error.response ? error.response.data.error : 'Có lỗi xảy ra');
         }
     };
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const response = await request.get('/user/profile', {
+                    headers: {
+                        Authorization: `Bearer ${tokenUser}`,
+                    },
+                });
+                setUser(response.data);
+                setTenNhan(response.data.tenKH); // Khởi tạo giá trị tenNhan từ user profile
+                setSdtNhan(response.data.sdt); // Khởi tạo giá trị sdtNhan từ user profile
+                setDiaChiNhan(response.data.diachi); // Khởi tạo giá trị diaChiNhan từ user profile
+            } catch (error) {
+                console.log('error', error);
+            }
+        };
+
+        fetchUserProfile();
+    }, [tokenUser]);
+
+    if (!user) {
+        return null; // Trả về null hoặc loading spinner khi user chưa được tải về
+    }
+    console.log('items: ', items);
+    console.log('cartItems: ', cartItems);
+    console.log('SL: ', totalQuantity);
+    console.log('TT: ', totalAmount);
 
     return (
         <>
@@ -85,10 +136,6 @@ function Checkout() {
                         >
                             <div className={cx('row')}>
                                 <div className={cx('col-lg-7', 'col-md-6')}>
-                                    <h6 className={cx('coupon__code')}>
-                                        <span className={cx('icon_tag_alt')}></span> Có phiếu giảm giá? Bấm vào đây để
-                                        nhập mã của bạn
-                                    </h6>
                                     <div className={cx('row')}>
                                         <div className={cx('checkout__input')}>
                                             <label htmlFor="tenNhan" className={cx('form-label')}>
@@ -103,6 +150,7 @@ function Checkout() {
                                                 onChange={(e) => setTenNhan(e.target.value)}
                                                 className={cx('form-control')}
                                                 autoComplete="off"
+                                                required
                                             />
                                         </div>
                                         <div className={cx('checkout__input')}>
@@ -112,12 +160,13 @@ function Checkout() {
                                                 </p>
                                             </label>
                                             <input
-                                                type="text"
+                                                type="number"
                                                 id="sdtNhan"
                                                 value={sdtNhan}
                                                 onChange={(e) => setSdtNhan(e.target.value)}
                                                 className={cx('form-control')}
                                                 autoComplete="off"
+                                                required
                                             />
                                         </div>
                                         <div className={cx('checkout__input')}>
@@ -133,6 +182,7 @@ function Checkout() {
                                                 onChange={(e) => setDiaChiNhan(e.target.value)}
                                                 className={cx('form-control')}
                                                 autoComplete="off"
+                                                required
                                             />
                                         </div>
                                         <div className={cx('checkout__input')}>
@@ -146,11 +196,14 @@ function Checkout() {
                                                 value={thanhToan}
                                                 onChange={(e) => setThanhToan(e.target.value)}
                                                 className={cx('form-control')}
+                                                required
                                             >
                                                 <option value="">Chọn phương thức thanh toán</option>
-                                                <option value="cash">Thanh toán khi nhận hàng</option>
-                                                <option value="paypal">Paypal</option>
-                                                <option value="credit-card">Thẻ tín dụng</option>
+                                                <option value="Thanh toán khi nhận hàng">
+                                                    Thanh toán khi nhận hàng
+                                                </option>
+                                                <option value="Thanh toán qua paypal">Thanh toán qua Paypal</option>
+                                                <option value="Thẻ tín dụng">Thẻ tín dụng</option>
                                             </select>
                                         </div>
                                     </div>
@@ -163,8 +216,8 @@ function Checkout() {
                                             <span>Giá</span>
                                         </div>
                                         <ul className={cx('checkout__total__products')}>
-                                            {cartItems.map((item, index) => (
-                                                <li key={item.idGH}>
+                                            {(items.length > 0 ? items : cartItems).map((item, index) => (
+                                                <li key={item.idNH || item.idGH}>
                                                     {index + 1}. {item.tenNH}
                                                     <CurrencyFormat
                                                         value={item.giaban}

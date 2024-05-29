@@ -1,17 +1,18 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import request from '~/utils/request';
 import config from '~/config/userRoutes';
 import classNames from 'classnames/bind';
 import style from './Header.module.scss';
 import images from '~/assets/img';
-import Image from '~/components/Image';
+// import Image from '~/components/Image';
 
 import { MdFavoriteBorder, MdOutlineShoppingBag } from 'react-icons/md';
 import { IoLanguage, IoSettingsOutline, IoEllipsisVertical } from 'react-icons/io5';
 import { FaRegQuestionCircle, FaKeyboard } from 'react-icons/fa';
 import { TbLogout2, TbLogin2, TbUserShield } from 'react-icons/tb';
 import { FiSearch } from 'react-icons/fi';
-import { RiUserLine } from 'react-icons/ri';
+import { RiUserLine, RiBillLine } from 'react-icons/ri';
 import Menu from '~/components/Popper/Menu';
 
 const cx = classNames.bind(style);
@@ -26,40 +27,6 @@ const MENU_ITEMS = [
                     type: 'language',
                     code: 'en',
                     title: 'English',
-                    // children: {
-                    //     title: 'language',
-                    //     data: [
-                    //         {
-                    //             code: 'en',
-                    //             title: 'English 1',
-                    //             children: {
-                    //                 title: 'language',
-                    //                 data: [
-                    //                     {
-                    //                         code: 'en',
-                    //                         title: 'English 2',
-                    //                     },
-                    //                     {
-                    //                         code: 'vi',
-                    //                         title: 'Tiếng Việt',
-                    //                     },
-                    //                     {
-                    //                         code: 'ja',
-                    //                         title: '日本語',
-                    //                     },
-                    //                 ],
-                    //             },
-                    //         },
-                    //         {
-                    //             code: 'vi',
-                    //             title: 'Tiếng Việt',
-                    //         },
-                    //         {
-                    //             code: 'ja',
-                    //             title: '日本語',
-                    //         },
-                    //     ],
-                    // },
                 },
                 {
                     type: 'language',
@@ -108,7 +75,7 @@ const USER_MENU = [
         to: '/myprofile',
     },
     {
-        icon: <RiUserLine />,
+        icon: <RiBillLine />,
         title: 'Đơn mua',
         to: '/myorder',
     },
@@ -167,8 +134,25 @@ const USER_MENU = [
 ];
 
 function Header() {
-    const currentUser = localStorage.getItem('tokenUser');
-    console.log('tokenUser : ', currentUser);
+    const tokenUser = localStorage.getItem('tokenUser');
+    const [avatar, setAvatar] = useState();
+    useEffect(() => {
+        // Lấy thông tin hồ sơ khi component được mount
+        request
+            .get('/user/profile', {
+                headers: {
+                    Authorization: `Bearer ${tokenUser}`,
+                },
+            })
+            .then((response) => {
+                setAvatar(response.data.avatar);
+            })
+            .catch((error) => {
+                console.error('Error fetching profile:', error);
+            });
+    }, [tokenUser]);
+    console.log('tokenUser : ', tokenUser);
+    console.log('avartar : ', avatar);
     return (
         <header className={cx('header')}>
             <div className={cx('header__top')}>
@@ -181,10 +165,8 @@ function Header() {
                         </div>
                         <div className={cx('col-lg-6')}>
                             <div className={cx('header__top__right')}>
-                                {/* <div className={cx('header__top__links')}> */}
                                 <Link to="#">VND</Link>
                                 <Link to="#">FAQs</Link>
-                                {/* </div> */}
                             </div>
                         </div>
                     </div>
@@ -216,7 +198,7 @@ function Header() {
                                             <Link to={config.about}> Giới Thiệu </Link>
                                         </li>
                                         <li>
-                                            <Link to={config.shopDetail}>CT Sản Phẩm</Link>
+                                            <Link to={'/shop-detail/slug1'}>CT Sản Phẩm</Link>
                                         </li>
                                         <li>
                                             <Link to={config.cart}>Giỏ Hàng</Link>
@@ -251,13 +233,13 @@ function Header() {
                                 <MdOutlineShoppingBag />
                             </Link>
                             {/*  */}
-                            {currentUser ? (
+                            {tokenUser ? (
                                 <>
                                     <div className={cx('current-user')}>
                                         <Menu items={USER_MENU}>
-                                            <Image
+                                            <img
                                                 className={cx('avatar-btn')}
-                                                src={require('~/assets/img/avatar.png')}
+                                                src={`http://localhost:8080/img/user-avt/${avatar}`}
                                                 alt=""
                                             />
                                         </Menu>

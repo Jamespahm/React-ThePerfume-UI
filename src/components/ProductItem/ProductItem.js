@@ -75,23 +75,23 @@ function ProductItem({ data }) {
             <Link to={`/shop-detail/${data.slug}`}>
                 <div className={cx('product__item')}>
                     <div className={cx('product__item__pic', 'set-bg')}>
-                        <Image src={require(`/src/assets/img/product/${data.hinhanh1}`)} alt="" />
+                        <Image src={`http://localhost:8080/img/products/${data.hinhanh1}`} alt="" />
                         <ul className={cx('product__hover')}>
                             <li>
                                 <button onClick={() => addToFav(data.idNH, 1)}>
-                                    <Image src={require('~/assets/img/icon/heart.png')} alt="" />
+                                    <Image src={'http://localhost:8080/img/icon/heart.png'} alt="" />
                                     <span>Yêu thích</span>
                                 </button>
                             </li>
                             <li>
                                 <button onClick={() => addToCart(data.idNH, 1)}>
-                                    <img src={require('~/assets/img/icon/cart.png')} alt="" />
+                                    <img src={'http://localhost:8080/img/icon/cart.png'} alt="" />
                                     <span>Thêm giỏ hàng</span>
                                 </button>
                             </li>
                             <li>
                                 <button to={`/shop-detail/${data.slug}`}>
-                                    <img src={require('~/assets/img/icon/compare.png')} alt="" />
+                                    <img src={'http://localhost:8080/img/icon/compare.png'} alt="" />
                                     <span>Xem chi tiết</span>
                                 </button>
                             </li>

@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
 
 import request from '~/utils/request';
 import styles from '../Admin.module.scss';
 import classNames from 'classnames/bind';
-import { FaSortDown, FaSortUp, FaEye, FaRegEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaSortDown, FaSortUp, FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 import { IoSearch } from 'react-icons/io5';
 import { FaCircleXmark } from 'react-icons/fa6';
 
@@ -19,6 +19,7 @@ function QLSP() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 7; // Số lượng mục trên mỗi trang
+    const navigator = useNavigate();
 
     useEffect(() => {
         const fetchPerfumes = async () => {
@@ -83,6 +84,25 @@ function QLSP() {
         setCurrentPage(page);
     };
 
+    const handleSoftDeleteItem = async (id) => {
+        try {
+            let text = 'Xóa sản phẩm ?';
+            if (window.confirm(text) === true) {
+                await request.put(`/perfume/${id}/delete`);
+                // Sau khi xóa thành công, cập nhật lại danh sách sản phẩm trong giỏ hàng
+                const updatedCartItems = perfumes.filter((item) => item.idNH !== id);
+                setPerfume(updatedCartItems);
+            } else {
+                return; // Trả về sản phẩm với số lượng = 1 nếu không xác nhận xóa
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+    const handleUpdatePerfume = (id) => {
+        // Chuyển hướng đến trang chi tiết hóa đơn và truyền id hóa đơn
+        navigator(`/admin/updateperfume/${id}`);
+    };
     console.log('page: ', totalPages);
 
     return (
@@ -91,7 +111,13 @@ function QLSP() {
                 <div className="col-md-12">
                     <div className="card strpied-tabled-with-hover">
                         <div className={cx('card-header-table')}>
-                            <h4 className="card-title">Danh sách nước hoa</h4>
+                            <h4 className={cx('card-title')}>Nước hoa</h4>
+                            <Link className={cx('card-link')} to={'/admin/createperfume'}>
+                                Thêm mới
+                            </Link>
+                            <Link className={cx('card-link')} to={'/admin/trashperfume'}>
+                                Thùng rác
+                            </Link>
                             <div className={cx('shop__sidebar__search')}>
                                 <form action="#">
                                     <input
@@ -141,7 +167,7 @@ function QLSP() {
                                         <tr key={perfume.idNH}>
                                             <td>
                                                 <img
-                                                    src={require(`/src/assets/img/product/${perfume.hinhanh1}`)}
+                                                    src={`http://localhost:8080/img/products/${perfume.hinhanh1}`}
                                                     alt=""
                                                 />
                                             </td>
@@ -156,13 +182,19 @@ function QLSP() {
                                             </td>
                                             <td>{perfume.soluong}</td>
                                             <td>
-                                                <button className={cx('table-btn', '')}>
+                                                {/* <button className={cx('table-btn', '')}>
                                                     <FaEye />
-                                                </button>
-                                                <button className={cx('table-btn', '')}>
+                                                </button> */}
+                                                <button
+                                                    onClick={() => handleUpdatePerfume(perfume.idNH)}
+                                                    className={cx('table-btn', '')}
+                                                >
                                                     <FaRegEdit />
                                                 </button>
-                                                <button className={cx('table-btn', '')}>
+                                                <button
+                                                    onClick={() => handleSoftDeleteItem(perfume.idNH)}
+                                                    className={cx('table-btn', '')}
+                                                >
                                                     <FaTrashAlt />
                                                 </button>
                                             </td>

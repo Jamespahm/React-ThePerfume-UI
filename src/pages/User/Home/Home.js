@@ -85,7 +85,7 @@ function Home() {
     /////////
 
     const calculateTimeLeft = () => {
-        const difference = +new Date('2024-05-30') - +new Date();
+        const difference = +new Date('2024-06-20') - +new Date();
         let timeLeft = {};
 
         if (difference > 0) {
@@ -104,12 +104,12 @@ function Home() {
                 seconds: 0,
             };
         }
-
         return timeLeft;
     };
 
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+    // console.log('perfume sale :', perfumes);
 
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
     useEffect(() => {
         const timer = setTimeout(() => {
             setTimeLeft(calculateTimeLeft());
@@ -125,21 +125,27 @@ function Home() {
                 <div className={cx('carousel-inner')}>
                     <div className={cx('carousel-item active')}>
                         <img
-                            src={require('~/assets/img/banner/271495673_1604142653284925_1036844338235843408_n.jpg')}
+                            src={
+                                'http://localhost:8080/img/banner/271495673_1604142653284925_1036844338235843408_n.jpg'
+                            }
                             className={cx('d-block w-100')}
                             alt="..."
                         />
                     </div>
                     <div className={cx('carousel-item')}>
                         <img
-                            src={require('~/assets/img/banner/294372419_1750235718675617_4597454377284936060_n.jpg')}
+                            src={
+                                'http://localhost:8080/img/banner/294372419_1750235718675617_4597454377284936060_n.jpg'
+                            }
                             className={cx('d-block w-100')}
                             alt="..."
                         />
                     </div>
                     <div className={cx('carousel-item')}>
                         <img
-                            src={require('~/assets/img/banner/301993485_1782695175429671_5496805865580899953_n.jpg')}
+                            src={
+                                'http://localhost:8080/img/banner/301993485_1782695175429671_5496805865580899953_n.jpg'
+                            }
                             className={cx('d-block w-100')}
                             alt="..."
                         />
@@ -170,33 +176,33 @@ function Home() {
                         <div className={cx('col-lg-7', 'offset-lg-4')}>
                             <div className={cx('banner__item')}>
                                 <div className={cx('banner__item__pic')}>
-                                    <img src={require('~/assets/img/banner/banner-1.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/banner/banner-1.jpg'} alt="" />
                                 </div>
                                 <div className={cx('banner__item__text')}>
                                     <h2>Nước Hoa Chính Hãng </h2>
-                                    <Link to="#">Xem Ngay</Link>
+                                    <Link to={'/shop'}>Xem Ngay</Link>
                                 </div>
                             </div>
                         </div>
                         <div className={cx('col-lg-5')}>
                             <div className={cx('banner__item', 'banner__item--middle')}>
                                 <div className={cx('banner__item__pic')}>
-                                    <img src={require('~/assets/img/banner/banner-2.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/banner/banner-2.jpg'} alt="" />
                                 </div>
                                 <div className={cx('banner__item__text')}>
                                     <h2>Bộ Sưu Tập Nước Hoa Cho Nam Giới</h2>
-                                    <Link to="#">Xem Ngay</Link>
+                                    <Link to={'/shop'}>Xem Ngay</Link>
                                 </div>
                             </div>
                         </div>
                         <div className={cx('col-lg-7')}>
                             <div className={cx('banner__item', 'banner__item--last')}>
                                 <div className={cx('banner__item__pic')}>
-                                    <img src={require('~/assets/img/banner/banner-3.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/banner/banner-3.jpg'} alt="" />
                                 </div>
                                 <div className={cx('banner__item__text')}>
                                     <h2>Các Thương Hiệu Hàng Đầu</h2>
-                                    <Link to="#">Xem Ngay</Link>
+                                    <Link to={'/shop'}>Xem Ngay</Link>
                                 </div>
                             </div>
                         </div>
@@ -223,51 +229,59 @@ function Home() {
                                 key={perfume.idNH}
                                 className={cx('col-lg-3', 'col-md-6', 'col-sm-6', 'col-md-6', 'col-sm-6', 'mix')}
                             >
-                                <div className={cx('product__item', 'sale')}>
-                                    <div className={cx('product__item__pic', 'set-bg')}>
-                                        <img src={require(`/src/assets/img/product/${perfume.hinhanh1}`)} alt="" />
-                                        <span className={cx('label')}>Sales</span>
-                                        <ul className={cx('product__hover')}>
-                                            <li>
-                                                <button onClick={() => addToFav(perfume.idNH, 1)}>
-                                                    <img src={require('~/assets/img/icon/heart.png')} alt="" />
-                                                    <span>Yêu thích</span>
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button onClick={() => addToCart(perfume.idNH, 1)}>
-                                                    <img src={require('~/assets/img/icon/cart.png')} alt="" />
-                                                    <span>Giỏ hàng</span>
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <Link to="/user/shop-details">
-                                                    <img src={require('~/assets/img/icon/compare.png')} alt="" />
-                                                    <span>Chi tiết</span>
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div className={cx('product__item__text')}>
-                                        <h6>{perfume.tenNH}</h6>
-                                        <p className={cx('quantity')}>Số lượng: {perfume.soluong} </p>
-                                        <div className={cx('rating')}>
-                                            <IoStar />
-                                            <IoStar />
-                                            <IoStar />
-                                            <IoStarHalf />
-                                            <IoStarOutline />
-                                        </div>
-                                        <h6>
-                                            <CurrencyFormat
-                                                value={perfume.giaban}
-                                                displayType={'text'}
-                                                thousandSeparator={true}
-                                                suffix={' VND'}
+                                <Link to={`/shop-detail/${perfume.slug}`}>
+                                    <div className={cx('product__item', 'sale')}>
+                                        <div className={cx('product__item__pic', 'set-bg')}>
+                                            <img
+                                                src={`http://localhost:8080/img/products/${perfume.hinhanh1}`}
+                                                alt=""
                                             />
-                                        </h6>
+                                            <span className={cx('label')}>Sales</span>
+                                            <ul className={cx('product__hover')}>
+                                                <li>
+                                                    <button onClick={() => addToFav(perfume.idNH, 1)}>
+                                                        <img src={'http://localhost:8080/img/icon/heart.png'} alt="" />
+                                                        <span>Yêu thích</span>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button onClick={() => addToCart(perfume.idNH, 1)}>
+                                                        <img src={'http://localhost:8080/img/icon/cart.png'} alt="" />
+                                                        <span>Giỏ hàng</span>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button to={`/shop-detail/${perfume.slug}`}>
+                                                        <img
+                                                            src={'http://localhost:8080/img/icon/compare.png'}
+                                                            alt=""
+                                                        />
+                                                        <span>Xem chi tiết</span>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div className={cx('product__item__text')}>
+                                            <h6>{perfume.tenNH}</h6>
+                                            <p className={cx('quantity')}>Đã bán: {perfume.soLuongBan} </p>
+                                            <div className={cx('rating')}>
+                                                <IoStar />
+                                                <IoStar />
+                                                <IoStar />
+                                                <IoStarHalf />
+                                                <IoStarOutline />
+                                            </div>
+                                            <h6>
+                                                <CurrencyFormat
+                                                    value={perfume.giaban}
+                                                    displayType={'text'}
+                                                    thousandSeparator={true}
+                                                    suffix={' VND'}
+                                                />
+                                            </h6>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             </div>
                         ))}
                     </div>
@@ -286,7 +300,7 @@ function Home() {
                         </div>
                         <div className="col-lg-4">
                             <div className={cx('categories__hot__deal')}>
-                                <img src={require('~/assets/img/product/product-7.jpg')} alt="" />
+                                <img src={'http://localhost:8080/img/products/product-7.jpg'} alt="" />
                                 <div className={cx('hot__deal__sticker')}>
                                     <span>Giảm giá còn</span>
                                     <h6>2.500.000</h6>
@@ -330,22 +344,22 @@ function Home() {
                         <div className="col-lg-8">
                             <div className={cx('instagram__pic')}>
                                 <div className={cx('instagram__pic__item', 'set-bg')}>
-                                    <img src={require('~/assets/img/instagram/instagram-1.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/instagram/instagram-1.jpg'} alt="" />
                                 </div>
                                 <div className={cx('instagram__pic__item', 'set-bg')}>
-                                    <img src={require('~/assets/img/instagram/instagram-2.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/instagram/instagram-2.jpg'} alt="" />
                                 </div>
                                 <div className={cx('instagram__pic__item', 'set-bg')}>
-                                    <img src={require('~/assets/img/instagram/instagram-3.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/instagram/instagram-3.jpg'} alt="" />
                                 </div>
                                 <div className={cx('instagram__pic__item', 'set-bg')}>
-                                    <img src={require('~/assets/img/instagram/instagram-4.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/instagram/instagram-4.jpg'} alt="" />
                                 </div>
                                 <div className={cx('instagram__pic__item', 'set-bg')}>
-                                    <img src={require('~/assets/img/instagram/instagram-5.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/instagram/instagram-5.jpg'} alt="" />
                                 </div>
                                 <div className={cx('instagram__pic__item', 'set-bg')}>
-                                    <img src={require('~/assets/img/instagram/instagram-6.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/instagram/instagram-6.jpg'} alt="" />
                                 </div>
                             </div>
                         </div>
@@ -379,12 +393,12 @@ function Home() {
                         <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
                             <div className={cx('blog__item')}>
                                 <div className={cx('blog__item__pic', 'set-bg')}>
-                                    <img src={require('~/assets/img/blog/blog-1.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/blog/blog-1.jpg'} alt="" />
                                 </div>
                                 <div className={cx('blog__item__text')}>
                                     <span>
-                                        <img src={cx('~/assets/img/icon/calendar.png')} alt="" /> Ngày 16 tháng 2 năm
-                                        2020
+                                        <img src={'http://localhost:8080/img/icon/calendar.png'} alt="" /> Ngày 16 tháng
+                                        2 năm 2020
                                     </span>
                                     <h5>Nước hoa Dolce & Gabbana (D&G) chính hãng, uy tín, chất lượng.</h5>
                                     <Link to="#">Đọc Thêm</Link>
@@ -394,12 +408,12 @@ function Home() {
                         <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
                             <div className={cx('blog__item')}>
                                 <div className={cx('blog__item__pic', 'set-bg')}>
-                                    <img src={require('~/assets/img/blog/blog-2.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/blog/blog-2.jpg'} alt="" />
                                 </div>
                                 <div className={cx('blog__item__text')}>
                                     <span>
-                                        <img src={cx('~/assets/img/icon/calendar.png')} alt="" /> Ngày 21 tháng 2 năm
-                                        2020
+                                        <img src={'http://localhost:8080/img/icon/calendar.png'} alt="" /> Ngày 21 tháng
+                                        2 năm 2020
                                     </span>
                                     <h5>Nước hoa D&G - một biểu tượng của thời trang phong cách Ý hiện đại.</h5>
                                     <Link to="#">Đọc Thêm</Link>
@@ -409,12 +423,12 @@ function Home() {
                         <div className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
                             <div className={cx('blog__item')}>
                                 <div className={cx('blog__item__pic', 'set-bg')}>
-                                    <img src={require('~/assets/img/blog/blog-3.jpg')} alt="" />
+                                    <img src={'http://localhost:8080/img/blog/blog-3.jpg'} alt="" />
                                 </div>
                                 <div className={cx('blog__item__text')}>
                                     <span>
-                                        <img src={cx('~/assets/img/icon/calendar.png')} alt="" /> Ngày 28 tháng 2 năm
-                                        2020
+                                        <img src={'http://localhost:8080/img/icon/calendar.png'} alt="" /> Ngày 28 tháng
+                                        2 năm 2020
                                     </span>
                                     <h5>Một phiên bản đặc biệt từ dòng Light Blue</h5>
                                     <Link to="#">Đọc Thêm</Link>

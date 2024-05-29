@@ -9,7 +9,7 @@ import styles from '../Admin.module.scss';
 
 const cx = classNames.bind(styles);
 
-function OrderDetail() {
+function UpdateOrder() {
     const { id } = useParams();
     const navigator = useNavigate();
     const [order, setOrder] = useState(null);
@@ -213,4 +213,4 @@ function OrderDetail() {
     );
 }
 
-export default OrderDetail;
+export default UpdateOrder;
