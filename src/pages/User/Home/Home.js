@@ -74,31 +74,25 @@ function Home() {
                 <div className={cx('carousel-inner')}>
                     <div className={cx('carousel-item active')}>
                         <img
-                            src={
-                                'http://localhost:8080/img/banner/271495673_1604142653284925_1036844338235843408_n.jpg'
-                            }
+                            src={'http://localhost:8080/img/banner/banner3.jpg'}
                             className={cx('d-block w-100')}
                             alt="..."
                         />
                     </div>
                     <div className={cx('carousel-item')}>
                         <img
-                            src={
-                                'http://localhost:8080/img/banner/294372419_1750235718675617_4597454377284936060_n.jpg'
-                            }
+                            src={'http://localhost:8080/img/banner/banner1.jpeg'}
                             className={cx('d-block w-100')}
                             alt="..."
                         />
                     </div>
-                    <div className={cx('carousel-item')}>
+                    {/* <div className={cx('carousel-item')}>
                         <img
-                            src={
-                                'http://localhost:8080/img/banner/301993485_1782695175429671_5496805865580899953_n.jpg'
-                            }
+                            src={'http://localhost:8080/img/banner/banner3.jpg'}
                             className={cx('d-block w-100')}
                             alt="..."
                         />
-                    </div>
+                    </div> */}
                 </div>
                 <button
                     className={cx('carousel-control-prev')}

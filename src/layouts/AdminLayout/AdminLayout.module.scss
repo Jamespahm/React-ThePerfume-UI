@@ -1777,7 +1777,7 @@ fieldset[disabled] .form-control {
 }
 
 .navbar .navbar-nav .nav-item .nav-link {
-    color: #888888;
+    color: #000000;
     padding: 10px 15px;
     margin: 0 10px;
     position: relative;
@@ -1840,7 +1840,7 @@ fieldset[disabled] .form-control {
     font-weight: bold;
     line-height: 18px;
     top: 10px;
-    left: 7px;
+    right: 0px;
 }
 
 .navbar .navbar-nav .dropdown-toggle:after {
@@ -4490,4 +4490,87 @@ Copyright (c) 2015 Daniel Eden
     font-size: 28px;
     margin-right: 6px;
     font-weight: 100;
+}
+.notification {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    margin-right: 5px;
+}
+
+.dropdownn {
+    position: relative;
+}
+
+.dropdownn-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    z-index: 1000;
+    width: 320px;
+    max-height: 250px;
+    overflow-y: auto;
+
+    .dropdownn-item {
+        padding: 0 10px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+        span {
+            padding: 10px 0px 10px 20px;
+            cursor: pointer;
+            text-wrap: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        &:last-child {
+            border-bottom: none;
+        }
+        .notification-content {
+            color: #333;
+        }
+    }
+
+    .dropdownn-item span {
+        flex-grow: 1;
+    }
+
+    .dropdownn-item button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        color: #4a4a4a;
+        font-size: 20px;
+        font-weight: 700;
+        margin-left: 10px;
+        padding: 0 5px 3px;
+    }
+
+    .dropdownn-item button:hover {
+        font-size: 22px;
+        color: #000000;
+    }
+}
+
+.dropdownn-menu.show {
+    display: block;
+}
+
+.dropdownn-item {
+    // padding: 10px 20px;
+    color: #333;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdownn-item:hover {
+    background-color: #e6e6e6;
 }

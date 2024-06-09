@@ -16,7 +16,7 @@ const cx = classNames.bind(styles);
 function ShopDetail() {
     const [activeTab, setActiveTab] = useState('tabs-1');
     const [activeContentTab, setActiveContentTab] = useState('tabs-5');
-    const [selectedSize, setSelectedSize] = useState('100ml'); // Giá trị mặc định
+    // const [selectedSize, setSelectedSize] = useState('100ml'); // Giá trị mặc định
     const [quantity, setQuantity] = useState(1); // Khởi tạo state cho giá trị quantity
     const { slug } = useParams();
     const [perfume, setPerfume] = useState();
@@ -60,9 +60,9 @@ function ShopDetail() {
     const handleContentTabClick = (tabId) => {
         setActiveContentTab(tabId);
     };
-    const handleChange = (event) => {
-        setSelectedSize(event.target.id);
-    };
+    // const handleChange = (event) => {
+    //     setSelectedSize(event.target.id);
+    // };
 
     const handleQuantityChange = (event) => {
         setQuantity(event.target.value); // Cập nhật giá trị quantity khi có sự thay đổi
@@ -229,7 +229,9 @@ function ShopDetail() {
                                 </div>
                                 <div className={cx('col-7', '')}>
                                     <div className={cx('product__details')}>
-                                        <h3>Nước hoa {perfume.tenNH}</h3>
+                                        <h3>
+                                            Nước hoa {perfume.tenNH} - {perfume.dungtich}
+                                        </h3>
 
                                         <div className={cx('rating')}>
                                             <IoStar />
@@ -254,7 +256,7 @@ function ShopDetail() {
                                         />
 
                                         <div className={cx('product__details__option')}>
-                                            <div className={cx('product__details__option__size')}>
+                                            {/* <div className={cx('product__details__option__size')}>
                                                 <label
                                                     className={cx({ active: selectedSize === '150ml' })}
                                                     htmlFor="150ml"
@@ -307,7 +309,7 @@ function ShopDetail() {
                                                         onChange={handleChange}
                                                     />
                                                 </label>
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <div className={cx('product__details__cart__option')}>
                                             <div className={cx('quantity')}>

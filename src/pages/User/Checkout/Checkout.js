@@ -16,7 +16,6 @@ function Checkout() {
     const [diaChiNhan, setDiaChiNhan] = useState('');
     const [thanhToan, setThanhToan] = useState('');
     const [user, setUser] = useState(null);
-    const ship = 25000;
     const [message, setMessage] = useState('');
     const [copySuccess, setCopySuccess] = useState(false);
     const tokenUser = localStorage.getItem('tokenUser');
@@ -306,18 +305,7 @@ function Checkout() {
                                                 </span>
                                             </li>
                                             <li>
-                                                Vận chuyển{' '}
-                                                <span>
-                                                    {totalQuantity > 1 ? (
-                                                        'MIỄN PHÍ'
-                                                    ) : (
-                                                        <CurrencyFormat
-                                                            value={ship}
-                                                            displayType={'text'}
-                                                            thousandSeparator={true}
-                                                        />
-                                                    )}
-                                                </span>
+                                                Vận chuyển <span>MIỄN PHÍ</span>
                                             </li>
                                             <li>
                                                 TỔNG TIỀN

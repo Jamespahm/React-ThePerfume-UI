@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
 import classNames from 'classnames/bind';
+import moment from 'moment';
+
 import style from './DetailOrder.module.scss';
 
 const cx = classNames.bind(style);
@@ -68,11 +70,17 @@ function DetailOrder({ order, isVisible, onClose, onCancelOrder }) {
                                             suffix={' VND'}
                                         />
                                     </p>
-                                    <span>
+                                    {/* <span>
                                         {order.thanhtoan === 'banking' &&
                                             'Vui lòng thanh toán và đợi người bán xác nhận !'}
-                                    </span>
+                                    </span> */}
                                 </div>
+                                <div className={cx('section')}>
+                                    <h3>Thời gian đặt</h3>
+                                    <p> {moment(order.ngaydat).format('HH:mm:ss DD/MM/YYYY')}</p>
+                                </div>
+                            </div>
+                            <div className={cx('details-section')}>
                                 {order.thanhtoan === 'banking' && (
                                     <div className={cx('section')}>
                                         <h3>Cách thức thanh toán</h3>
@@ -80,11 +88,17 @@ function DetailOrder({ order, isVisible, onClose, onCancelOrder }) {
                                         <p>0866866540</p>
                                         <p>Pham Huy Hoang</p>
                                         <p>
-                                            Chuyển khoản với nội dung: {order.idHD}-{order.sdtnhan}
+                                            Nội dung: {order.idHD}-{order.sdtnhan}
                                             <button type="button" className={cx('btn-copy')} onClick={handleCopy}>
                                                 {copySuccess ? 'Đã sao chép' : 'Sao chép'}
                                             </button>
                                         </p>
+                                    </div>
+                                )}
+                                {order.trangthai === '3' && (
+                                    <div className={cx('section')}>
+                                        <h3>Đã giao</h3>
+                                        <p>{moment(order.ngaygiao).format('HH:mm:ss DD/MM/YYYY')}</p>
                                     </div>
                                 )}
                             </div>

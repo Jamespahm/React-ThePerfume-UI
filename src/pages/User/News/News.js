@@ -7,7 +7,7 @@ function News() {
     return (
         <>
             <section className={cx('breadcrumb-blog', 'set-bg')} data-setbg="assets/img/breadcrumb-bg.jpg">
-                <img src={'http://localhost:8080/img/breadcrumb-bg.jpg'} alt="" />
+                <img src={'http://localhost:8080/img/banner/news-banner.jpg'} alt="" />
             </section>
             <section className={cx('blog', 'spad')}>
                 <div className={cx('container')}>

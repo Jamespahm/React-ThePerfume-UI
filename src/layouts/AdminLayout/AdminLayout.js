@@ -1,24 +1,76 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import className from 'classnames/bind';
 import styles from './AdminLayout.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RxDashboard } from 'react-icons/rx';
 import { AiTwotoneShop } from 'react-icons/ai';
 import { GoProjectRoadmap } from 'react-icons/go';
 import { BsBox } from 'react-icons/bs';
 import { BiCategory } from 'react-icons/bi';
 import { PiUserSquare } from 'react-icons/pi';
-// import { ImStatsDots } from 'react-icons/im';
-
 import images from '~/assets/img';
+import request from '~/utils/request';
+
 const cx = className.bind(styles);
 
 function AdminLayout({ children }) {
     const [activeTab, setActiveTab] = useState('tab-1');
+    const [notifications, setNotifications] = useState([]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownnRef = useRef(null);
+    const navigator = useNavigate();
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const res = await request.get('/notification/unread');
+                setNotifications(res.data);
+            } catch (error) {
+                console.log('error', error);
+            }
+        };
+        fetchNotifications();
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownnRef.current && !dropdownnRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const handleTabClick = (tabId) => {
         setActiveTab(tabId);
+    };
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+    const deleteNotification = async (notificationId) => {
+        try {
+            await request.delete(`/notification/${notificationId}/delete`);
+            const updatedNotifications = notifications.filter((notification) => notification.idTB !== notificationId);
+            setNotifications(updatedNotifications);
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+        }
+    };
+    const readNotification = async (notificationId) => {
+        try {
+            await request.put(`/notification/${notificationId}/read`);
+            const updatedNotifications = notifications.filter((notification) => notification.idTB !== notificationId);
+            setNotifications(updatedNotifications);
+            navigator('/admin/qlhd');
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+        }
     };
     return (
         <>
@@ -31,12 +83,12 @@ function AdminLayout({ children }) {
                             </Link>
                         </div>
                         <ul className={cx('nav')}>
-                            <li className={cx(`nav-item`, `${activeTab === 'tab-1' ? 'active' : ''}`)}>
+                            <li className={cx('nav-item', { active: activeTab === 'tab-1' })}>
                                 <Link className={cx('nav-link')} to={'/admin'} onClick={() => handleTabClick('tab-1')}>
                                     <RxDashboard className={cx('nav-icon')} /> <p>Dashboard</p>
                                 </Link>
                             </li>
-                            <li className={cx(`nav-item`, `${activeTab === 'tab-2' ? 'active' : ''}`)}>
+                            <li className={cx('nav-item', { active: activeTab === 'tab-2' })}>
                                 <Link
                                     className={cx('nav-link')}
                                     to={'/admin/qlsp'}
@@ -46,7 +98,7 @@ function AdminLayout({ children }) {
                                     <p>Quản lý Nước hoa</p>
                                 </Link>
                             </li>
-                            <li className={cx(`nav-item`, `${activeTab === 'tab-3' ? 'active' : ''}`)}>
+                            <li className={cx('nav-item', { active: activeTab === 'tab-3' })}>
                                 <Link
                                     className={cx('nav-link')}
                                     to={'/admin/qlhd'}
@@ -56,7 +108,7 @@ function AdminLayout({ children }) {
                                     <p>Quản lý Hóa đơn</p>
                                 </Link>
                             </li>
-                            <li className={cx(`nav-item`, `${activeTab === 'tab-4' ? 'active' : ''}`)}>
+                            <li className={cx('nav-item', { active: activeTab === 'tab-4' })}>
                                 <Link
                                     className={cx('nav-link')}
                                     to={'/admin/qlkh'}
@@ -66,7 +118,7 @@ function AdminLayout({ children }) {
                                     <p>Quản lý Khách hàng</p>
                                 </Link>
                             </li>
-                            <li className={cx(`nav-item`, `${activeTab === 'tab-5' ? 'active' : ''}`)}>
+                            <li className={cx('nav-item', { active: activeTab === 'tab-5' })}>
                                 <Link
                                     className={cx('nav-link')}
                                     to={'/admin/qlth'}
@@ -76,7 +128,7 @@ function AdminLayout({ children }) {
                                     <p>Quản lý Thương hiệu</p>
                                 </Link>
                             </li>
-                            <li className={cx(`nav-item`, `${activeTab === 'tab-6' ? 'active' : ''}`)}>
+                            <li className={cx('nav-item', { active: activeTab === 'tab-6' })}>
                                 <Link
                                     className={cx('nav-link')}
                                     to={'/admin/qll'}
@@ -86,130 +138,59 @@ function AdminLayout({ children }) {
                                     <p>Quản lý Loại</p>
                                 </Link>
                             </li>
-                            {/* <li className={cx(`nav-item`, `${activeTab === 'tab-7' ? 'active' : ''}`)}>
-                                <Link
-                                    className={cx('nav-link', 'active')}
-                                    to=""
-                                    onClick={() => handleTabClick('tab-7')}
-                                >
-                                    <ImStatsDots className={cx('nav-icon')} />
-                                    <p>Thống kê dữ liệu</p>
-                                </Link>
-                            </li> */}
                         </ul>
                     </div>
                 </div>
                 <div className={cx('main-panel')}>
-                    {/* NAV */}
-                    <nav className={cx('navbar', 'navbar-expand-lg')} color-on-scroll="500">
-                        <div className={cx('collapse', 'navbar-collapse', 'justify-content-end')} id="navigation">
-                            <h5 className={cx('navbar-nav')}>Dashboard</h5>
-                            <ul className={cx('nav', 'navbar-nav', 'mr-auto')}>
-                                <li className={cx('nav-item')}>
-                                    <Link to="#" className={cx('nav-link')} data-toggle="dropdown">
-                                        <i className={cx('nc-icon', 'nc-palette')}></i>
-                                        <span className={cx('d-lg-none')}>Dashboard</span>
-                                    </Link>
-                                </li>
-                                <li className={cx('dropdown', 'nav-item')}>
-                                    <Link to="#" className={cx('dropdown-toggle', 'nav-link')} data-toggle="dropdown">
-                                        <i className={cx('nc-icon', 'nc-planet')}></i>
-                                        <span className={cx('notification')}>5</span>
-                                        <span className={cx('d-lg-none')}>Notification</span>
-                                    </Link>
-                                    <ul className={cx('dropdown-menu')}>
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Notification 1
-                                        </Link>
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Notification 2
-                                        </Link>
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Notification 3
-                                        </Link>
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Notification 4
-                                        </Link>
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Another notification
-                                        </Link>
-                                    </ul>
-                                </li>
-                                <li className={cx('nav-item')}>
-                                    <Link to="#" className={cx('nav-link')}>
-                                        <i className={cx('nc-icon', 'nc-zoom-split')}></i>
-                                        <span className={cx('d-lg-block')}>&nbsp;Search</span>
-                                    </Link>
-                                </li>
-                            </ul>
+                    <nav className={cx('navbar', 'navbar-expand-lg')}>
+                        <div className={cx('collapse', 'navbar-collapse', 'justify-content-end')}>
                             <ul className={cx('navbar-nav', 'ml-auto')}>
-                                <li className={cx('nav-item')}>
-                                    <Link className={cx('nav-link')} to="#pablo">
-                                        <span className={cx('no-icon')}>Account</span>
+                                <li
+                                    className={cx('nav-item', 'dropdownn', { open: isDropdownOpen })}
+                                    ref={dropdownnRef}
+                                >
+                                    <Link to="#" className={cx('nav-link')} onClick={toggleDropdown}>
+                                        <span className={cx('notification')}>{notifications.length}</span>
+                                        <span className={cx('d-lg')}>Thông báo</span>
                                     </Link>
-                                </li>
-                                <li className={cx('nav-item', 'dropdown')}>
-                                    <Link
-                                        className={cx('nav-link', 'dropdown-toggle')}
-                                        to="http://example.com"
-                                        id="navbarDropdownMenuLink"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <span className={cx('no-icon')}>Dropdown</span>
-                                    </Link>
-                                    <div className={cx('dropdown-menu')} aria-labelledby="navbarDropdownMenuLink">
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Action
-                                        </Link>
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Another action
-                                        </Link>
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Something
-                                        </Link>
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Something else here
-                                        </Link>
-                                        <div className={cx('divider')}></div>
-                                        <Link className={cx('dropdown-item')} to="#">
-                                            Separated link
-                                        </Link>
-                                    </div>
+                                    {isDropdownOpen && (
+                                        <div className={cx('dropdownn-menu', 'show')}>
+                                            {notifications.length > 0 ? (
+                                                notifications.map((notification, index) => (
+                                                    <div key={index} className={cx('dropdownn-item')}>
+                                                        <span
+                                                            className={cx('notification-content')}
+                                                            onClick={() => readNotification(notification.idTB)}
+                                                        >
+                                                            {notification.noidung}
+                                                        </span>
+                                                        <button onClick={() => deleteNotification(notification.idTB)}>
+                                                            &times;
+                                                        </button>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <span className={cx('dropdownn-item')}>Không có thông báo mới</span>
+                                            )}
+                                        </div>
+                                    )}
                                 </li>
                                 <li className={cx('nav-item')}>
-                                    <Link className={cx('nav-link')} to="#pablo">
-                                        <span className={cx('no-icon')}>Log out</span>
+                                    <Link className={cx('nav-link')} to="#">
+                                        <span className={cx('no-icon')}>Tài khoản</span>
+                                    </Link>
+                                </li>
+                                <li className={cx('nav-item')}>
+                                    <Link className={cx('nav-link')} to="#">
+                                        <span className={cx('no-icon')}>Đăng xuất</span>
                                     </Link>
                                 </li>
                             </ul>
                         </div>
-                        {/* </div> */}
                     </nav>
                     <div className={cx('content')}>
                         <div className={cx('container-fluid')}>{children}</div>
                     </div>
-                    {/* <footer className={cx('footer')}>
-                        <div className={cx('container-fluid')}>
-                            <nav>
-                                <ul className={cx('footer-menu')}>
-                                    <li>
-                                        <Link to="#">Home</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#">Company</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#">Portfolio</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#">Blog</Link>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </footer> */}
                 </div>
             </div>
         </>
