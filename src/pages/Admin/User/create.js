@@ -9,6 +9,7 @@ const CreateUser = () => {
     const [user, setUser] = useState({
         tenKH: '',
         gioitinh: '',
+        tenDN: '',
         sdt: '',
         email: '',
         diachi: '',
@@ -61,6 +62,12 @@ const CreateUser = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (!user.avatar) {
+            alert('Please select an avatar image.');
+            return;
+        }
+
         const formData = new FormData();
         Object.keys(user).forEach((key) => {
             formData.append(key, user[key]);
@@ -77,6 +84,7 @@ const CreateUser = () => {
                 setUser({
                     tenKH: '',
                     gioitinh: '',
+                    tenDN: '',
                     sdt: '',
                     email: '',
                     diachi: '',
@@ -86,7 +94,7 @@ const CreateUser = () => {
                 setPreviewImages({
                     avatar: null,
                 });
-                navigate('/admin/qlkh'); // Điều hướng về trang danh sách nước hoa sau khi cập nhật thành công
+                navigate('/admin/qlkh'); // Navigate to customer list page after successful creation
             })
             .catch((error) => {
                 console.error('There was an error adding the user!', error);
@@ -119,6 +127,7 @@ const CreateUser = () => {
                             onChange={handleChange}
                             required
                         >
+                            <option value="">Chọn giới tính</option>
                             <option value="nam">Nam</option>
                             <option value="nữ">Nữ</option>
                             <option value="khác">Khác</option>
@@ -129,18 +138,21 @@ const CreateUser = () => {
                     <div className="mb-3 col-md-6">
                         <label className={cx('form-label')}>SDT:</label>
                         <input
-                            type="number"
+                            type="tel"
                             className={cx('form-control')}
                             name="sdt"
                             value={user.sdt}
                             onChange={handleChange}
+                            pattern="^0[0-9]{9}$"
+                            maxLength="10"
+                            title="Số điện thoại không đúng !"
                             required
                         />
                     </div>
                     <div className="mb-3 col-md-6">
                         <label className={cx('form-label')}>Email:</label>
                         <input
-                            type="text"
+                            type="email"
                             className={cx('form-control')}
                             name="email"
                             value={user.email}
@@ -152,12 +164,12 @@ const CreateUser = () => {
 
                 <div className="row">
                     <div className="mb-3 col-md-6">
-                        <label className={cx('form-label')}>Địa chỉ:</label>
+                        <label className={cx('form-label')}>Tên đăng nhập:</label>
                         <input
                             type="text"
                             className={cx('form-control')}
-                            name="diachi"
-                            value={user.diachi}
+                            name="tenDN"
+                            value={user.tenDN}
                             onChange={handleChange}
                             required
                         />
@@ -165,7 +177,7 @@ const CreateUser = () => {
                     <div className="mb-3 col-md-6">
                         <label className={cx('form-label')}>Mật khẩu:</label>
                         <input
-                            type="text"
+                            type="password"
                             className={cx('form-control')}
                             name="matkhau"
                             value={user.matkhau}
@@ -173,6 +185,17 @@ const CreateUser = () => {
                             required
                         />
                     </div>
+                </div>
+                <div className="mb-3">
+                    <label className={cx('form-label')}>Địa chỉ:</label>
+                    <input
+                        type="text"
+                        className={cx('form-control')}
+                        name="diachi"
+                        value={user.diachi}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
                 <div className="row mt-3">
                     <div className="mb-3 col-md-3">

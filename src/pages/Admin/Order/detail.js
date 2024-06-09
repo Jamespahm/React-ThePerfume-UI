@@ -37,16 +37,6 @@ function OrderDetail() {
         }));
     };
 
-    // const handleDetailChange = (index, e) => {
-    //     const { name, value } = e.target;
-    //     const newDetails = [...details];
-    //     newDetails[index] = {
-    //         ...newDetails[index],
-    //         [name]: value,
-    //     };
-    //     setDetails(newDetails);
-    // };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -86,66 +76,65 @@ function OrderDetail() {
                                     <tbody>
                                         <tr>
                                             <td>
-                                                {order.tennhan}
-                                                {/* <input
+                                                {/* {order.tennhan} */}
+                                                <input
                                                     type="text"
                                                     name="tennhan"
                                                     value={order.tennhan}
                                                     onChange={handleInputChange}
-                                                    className={cx('form-control')}
-                                                /> */}
+                                                    className={cx('order-update-input', 'ten-input')}
+                                                />
                                             </td>
                                             <td>
-                                                {order.sdtnhan}
-                                                {/* <input
-                                                    type="text"
+                                                {/* {order.sdtnhan} */}
+                                                <input
+                                                    type="tel"
                                                     name="sdtnhan"
                                                     value={order.sdtnhan}
                                                     onChange={handleInputChange}
-                                                    className={cx('form-control')}
-                                                /> */}
+                                                    className={cx('order-update-input', 'sdt-input')}
+                                                />
                                             </td>
                                             <td>
-                                                {order.diachinhan}
-                                                {/* <input
+                                                {/* {order.diachinhan} */}
+                                                <input
                                                     type="text"
                                                     name="diachinhan"
                                                     value={order.diachinhan}
                                                     onChange={handleInputChange}
-                                                    className={cx('form-control')}
-                                                /> */}
+                                                    className={cx('order-update-input', 'dc-input')}
+                                                />
                                             </td>
                                             <td>
                                                 <CurrencyFormat
                                                     value={order.tongtien}
                                                     displayType={'text'}
                                                     thousandSeparator={true}
-                                                    suffix={' VND'}
-                                                    onChange={handleInputChange}
                                                 />
                                             </td>
                                             <td>{moment(order.ngaydat).format('HH:mm:ss DD/MM/YYYY')}</td>
-                                            <td>{order.thanhtoan}</td>
+                                            <td>
+                                                {order.thanhtoan === 'cod' && 'Thanh toán khi nhận hàng'}
+                                                {order.thanhtoan === 'banking' && 'Chuyển khoản ngân hàng'}
+                                            </td>
                                             <td>
                                                 <select
-                                                    className={cx('state-select')}
+                                                    className={cx('order-update-input')}
                                                     name="trangthai"
                                                     value={order.trangthai}
                                                     onChange={handleInputChange}
                                                 >
-                                                    <option className={cx('state-option')} value="Chờ xác nhận">
+                                                    <option className={cx('state-option')} value="1">
                                                         Chờ xác nhận
                                                     </option>
-                                                    <option className={cx('state-option')} value="Đang chuẩn bị hàng">
-                                                        Đang chuẩn bị hàng
+                                                    <option className={cx('state-option')} value="2">
+                                                        Đang giao
                                                     </option>
-                                                    <option className={cx('state-option')} value="Đang vận chuyển">
-                                                        Đang vận chuyển
-                                                    </option>
-                                                    <option className={cx('state-option')} value="Hoàn thành">
+
+                                                    <option className={cx('state-option')} value="3">
                                                         Hoàn thành
                                                     </option>
-                                                    <option className={cx('state-option')} value="Hủy">
+                                                    <option className={cx('state-option')} value="4">
                                                         Hủy
                                                     </option>
                                                 </select>

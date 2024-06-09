@@ -3,12 +3,16 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+        "@ckeditor/ckeditor5-react": "^7.0.0",
+        "@fortawesome/react-fontawesome": "^0.2.2",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
         "@tippyjs/react": "^4.2.6",
         "axios": "^1.6.8",
         "bootstrap": "^4.6.2",
+        "chart.js": "^4.4.3",
         "classnames": "^2.5.1",
         "currency-formatter": "^1.5.9",
         "customize-cra": "^1.0.0",
@@ -17,6 +21,7 @@
         "react": "^18.2.0",
         "react-bootstrap": "^2.10.2",
         "react-chartist": "^0.14.4",
+        "react-chartjs-2": "^5.2.0",
         "react-currency-format": "^1.1.0",
         "react-dom": "^18.2.0",
         "react-dropzone": "^14.2.3",
@@ -24,6 +29,7 @@
         "react-iframe": "^1.8.5",
         "react-router-dom": "^6.3.0",
         "react-scripts": "5.0.1",
+        "recharts": "^2.12.7",
         "web-vitals": "^2.1.4"
     },
     "scripts": {

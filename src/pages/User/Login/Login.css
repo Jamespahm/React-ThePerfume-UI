@@ -190,7 +190,7 @@ img {
 }
 h1.w3ls {
     font-size: 42px;
-    color: #fff;
+    color: #000000;
     padding: 20px 0 15px;
     /* font-weight: 500; */
     text-align: center;
@@ -198,36 +198,37 @@ h1.w3ls {
     text-transform: uppercase;
 }
 .content-w3ls {
-    background-color: #3b414c;
+    /* background-color: #3b414c; */
+    /* height: 550px; */
     width: 70%;
     margin: 0 auto 50px;
     padding: 0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
 }
 .content-w3ls .content-agile1 {
     width: 50%;
     float: left;
-    background: url(/src/assets/img/image.png) no-repeat;
+    /* background: url(/src/assets/img/image.png) no-repeat; */
     background-position: center;
     background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     -ms-background-size: cover;
-    height: 625px;
+    /* height: 625px; */
 }
 
 .content-w3ls .content-agile11 {
     width: 50%;
     float: left;
-    background: url(/src/assets/img/image.png) no-repeat;
+    /* background: url(/src/assets/img/image.png) no-repeat; */
     background-position: center;
     background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     -ms-background-size: cover;
-    height: 550px;
+    /* background-color: transparent; */
 }
 
 h2.agileits1 {
@@ -250,15 +251,25 @@ h2.agileits1 {
 }
 
 .agileits2:hover {
-    font-weight: bolder;
+    /* font-weight: bold; */
     text-shadow: 0.5px 0.5px 1px black;
 }
 .content-w3ls .content-agile2 {
     width: 50%;
     float: left;
-    padding: 25px 0 0;
+    padding: 100px 0;
+    background-color: #3b3b3b;
     margin: auto;
-    margin-top: 100px;
+    /* margin-top: 100px; */
+}
+
+.content-w3ls .content-agile22 {
+    width: 50%;
+    float: left;
+    padding: 50px 0;
+    background-color: #3b3b3b;
+    margin: auto;
+    /* margin-top: 100px; */
 }
 
 .login-input {
@@ -360,4 +371,20 @@ ul.social-agileinfo li a i.fa:hover {
     -moz-animation: spin 2s linear infinite;
     -o-animation: spin 2s linear infinite;
     -ms-animation: spin 2s linear infinite;
+}
+.custom-checkbox {
+    margin: 10px 6px 0 115px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border: 1px solid #ccc;
+    /* border-radius: 3px; */
+    position: relative;
+    cursor: pointer;
+}
+.checkbox-label {
+    color: white;
+    cursor: pointer;
+    vertical-align: middle;
 }

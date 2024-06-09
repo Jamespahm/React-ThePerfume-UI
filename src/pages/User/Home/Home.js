@@ -1,87 +1,36 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
-import CurrencyFormat from 'react-currency-format';
 
 import request from '~/utils/request';
 import style from './Home.module.scss';
 
-import { IoStar, IoStarOutline, IoStarHalf } from 'react-icons/io5';
+import ProductItem from '~/components/ProductItem';
 
 const cx = classNames.bind(style);
 function Home() {
     const [perfumes, setPerfume] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('Sales'); // Mặc định là 'hotSales'
+
     useEffect(() => {
         const fetchPerfumes = async () => {
             try {
-                const res = await request.get('/perfume/sales');
+                let endpoint = '';
+                if (selectedCategory === 'New') {
+                    endpoint = '/perfume/newest';
+                } else if (selectedCategory === 'Sales') {
+                    endpoint = '/perfume/sales';
+                }
+                const res = await request.get(endpoint);
                 setPerfume(res.data);
             } catch (error) {
                 console.log('error', error);
             }
         };
         fetchPerfumes();
-    }, []);
+    }, [selectedCategory]);
     ////////
-    const navigate = useNavigate();
-    const addToCart = (idNH, soLuong) => {
-        const tokenUser = localStorage.getItem('tokenUser'); // Lấy tokenUser từ localStorage
 
-        // Dữ liệu cần gửi đi
-        const data = {
-            productId: idNH,
-            quantity: soLuong,
-        };
-
-        // Cấu hình các thông số của yêu cầu POST
-        const config = {
-            headers: {
-                Authorization: `Bearer ${tokenUser}`, // Thêm token vào header Authorization
-            },
-        };
-
-        // Gửi yêu cầu POST đến endpoint /cart/add
-        request
-            .post('/cart/add', data, config)
-            .then((response) => {
-                // Xử lý kết quả từ server (nếu cần)
-                console.log(response.data.message);
-                navigate('/cart');
-            })
-            .catch((error) => {
-                // Xử lý lỗi (nếu có)
-                console.error('Error:', error);
-            });
-    };
-    const addToFav = (idNH, soLuong) => {
-        const tokenUser = localStorage.getItem('tokenUser'); // Lấy tokenUser từ localStorage
-
-        // Dữ liệu cần gửi đi
-        const data = {
-            productId: idNH,
-            quantity: soLuong,
-        };
-
-        // Cấu hình các thông số của yêu cầu POST
-        const config = {
-            headers: {
-                Authorization: `Bearer ${tokenUser}`, // Thêm token vào header Authorization
-            },
-        };
-
-        // Gửi yêu cầu POST đến endpoint /cart/add
-        request
-            .post('/favourite/add', data, config)
-            .then((response) => {
-                // Xử lý kết quả từ server (nếu cần)
-                console.log(response.data.message);
-                navigate('/favourite');
-            })
-            .catch((error) => {
-                // Xử lý lỗi (nếu có)
-                console.error('Error:', error);
-            });
-    };
     /////////
 
     const calculateTimeLeft = () => {
@@ -215,11 +164,19 @@ function Home() {
                     <div className={cx('row')}>
                         <div className={cx('col-lg-12')}>
                             <ul className={cx('filter__controls')}>
-                                <li className={cx('active')} data-filter="*">
-                                    Best Sellers
+                                <li
+                                    className={selectedCategory === 'Sales' ? cx('active') : ''}
+                                    onClick={() => setSelectedCategory('Sales')}
+                                >
+                                    Nước hoa bán chạy
                                 </li>
-                                <li>New Arrivals</li>
-                                <li>Hot Sales</li>
+                                <li
+                                    className={selectedCategory === 'New' ? cx('active') : ''}
+                                    onClick={() => setSelectedCategory('New')}
+                                >
+                                    Nước hoa mới
+                                </li>
+                                <li>Nước hoa giảm giá</li>
                             </ul>
                         </div>
                     </div>
@@ -227,61 +184,17 @@ function Home() {
                         {perfumes.map((perfume) => (
                             <div
                                 key={perfume.idNH}
-                                className={cx('col-lg-3', 'col-md-6', 'col-sm-6', 'col-md-6', 'col-sm-6', 'mix')}
+                                className={cx('col-lg-3', 'col-md-6', 'col-sm-6', 'tag-productitem')}
                             >
-                                <Link to={`/shop-detail/${perfume.slug}`}>
-                                    <div className={cx('product__item', 'sale')}>
-                                        <div className={cx('product__item__pic', 'set-bg')}>
-                                            <img
-                                                src={`http://localhost:8080/img/products/${perfume.hinhanh1}`}
-                                                alt=""
-                                            />
-                                            <span className={cx('label')}>Sales</span>
-                                            <ul className={cx('product__hover')}>
-                                                <li>
-                                                    <button onClick={() => addToFav(perfume.idNH, 1)}>
-                                                        <img src={'http://localhost:8080/img/icon/heart.png'} alt="" />
-                                                        <span>Yêu thích</span>
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button onClick={() => addToCart(perfume.idNH, 1)}>
-                                                        <img src={'http://localhost:8080/img/icon/cart.png'} alt="" />
-                                                        <span>Giỏ hàng</span>
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button to={`/shop-detail/${perfume.slug}`}>
-                                                        <img
-                                                            src={'http://localhost:8080/img/icon/compare.png'}
-                                                            alt=""
-                                                        />
-                                                        <span>Xem chi tiết</span>
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div className={cx('product__item__text')}>
-                                            <h6>{perfume.tenNH}</h6>
-                                            <p className={cx('quantity')}>Đã bán: {perfume.soLuongBan} </p>
-                                            <div className={cx('rating')}>
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStar />
-                                                <IoStarHalf />
-                                                <IoStarOutline />
-                                            </div>
-                                            <h6>
-                                                <CurrencyFormat
-                                                    value={perfume.giaban}
-                                                    displayType={'text'}
-                                                    thousandSeparator={true}
-                                                    suffix={' VND'}
-                                                />
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </Link>
+                                <div
+                                    className={cx('label', {
+                                        new: selectedCategory === 'New',
+                                        sales: selectedCategory === 'Sales',
+                                    })}
+                                >
+                                    {selectedCategory === 'New' ? 'New' : 'Sales'}
+                                </div>
+                                <ProductItem data={perfume} />
                             </div>
                         ))}
                     </div>

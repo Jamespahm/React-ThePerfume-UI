@@ -16,6 +16,9 @@ td:hover {
 }
 .card-title {
     float: left;
+    margin: 5px 10px;
+    font-size: 20px;
+    font-weight: 500;
 }
 .card-link {
     float: left;
@@ -106,10 +109,14 @@ td:hover {
 }
 .sort-btn {
     background-color: transparent;
+    // font-size: 17px;
+    // padding: 5px;
+    // margin-left: 5px;
 }
 .table-black {
     th,
-    td {
+    td,
+    span {
         color: #ffffff;
         background-color: #6e6e6e;
     }
@@ -119,7 +126,7 @@ td > img {
 }
 .table-btn {
     background-color: transparent;
-    margin: 10px;
+    margin: 9px;
     font-size: 18px;
 }
 /* src/custom.css */
@@ -135,7 +142,14 @@ select {
     margin-top: 10px !important;
 }
 .file-input {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 .upload-button {
     display: block;
@@ -151,10 +165,19 @@ select {
     background-color: #dadada;
 }
 
-.state-select {
+.order-update-input {
     background-color: transparent;
     color: #ffffff;
     border: 1px solid #c0c0c0;
-    padding: 0 10px;
+    padding: 5px 10px;
     background-color: #6e6e6e;
+}
+.ten-input {
+    width: 140px;
+}
+.sdt-input {
+    width: 110px;
+}
+.dc-input {
+    width: 200px;
 }

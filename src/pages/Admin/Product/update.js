@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import request from '~/utils/request';
 import styles from '../Admin.module.scss';
 import classNames from 'classnames/bind';
@@ -19,7 +21,9 @@ function UpdatePerfume() {
         hinhanh3: '',
         hinhanh4: '',
         soluong: '',
+        soluongban: '',
         mota: '',
+        motact: '',
         idTH: '',
         idL: '',
     });
@@ -38,12 +42,12 @@ function UpdatePerfume() {
         // Fetch brands and categories when the component mounts
         request
             .get('/brand')
-            .then((response) => setBrands(response.data))
+            .then((response) => setBrands(response.data.brands))
             .catch((error) => console.error('Error fetching brands:', error));
 
         request
             .get('/category')
-            .then((response) => setCategories(response.data))
+            .then((response) => setCategories(response.data.categories))
             .catch((error) => console.error('Error fetching categories:', error));
     }, []);
 
@@ -78,6 +82,9 @@ function UpdatePerfume() {
             setPerfume((prev) => ({ ...prev, [name]: value }));
         }
     };
+    const handleDescriptionChange = (data, field) => {
+        setPerfume((prev) => ({ ...prev, [field]: data }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -106,18 +113,18 @@ function UpdatePerfume() {
             <h2>Cập nhật nước hoa</h2>
 
             <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <label className={cx('form-label')}>Tên nước hoa:</label>
+                    <input
+                        type="text"
+                        className={cx('form-control')}
+                        name="tenNH"
+                        value={perfume.tenNH}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
                 <div className="row">
-                    <div className="mb-3 col-md-6">
-                        <label className={cx('form-label')}>Tên nước hoa:</label>
-                        <input
-                            type="text"
-                            className={cx('form-control')}
-                            name="tenNH"
-                            value={perfume.tenNH}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
                     <div className="mb-3 col-md-6">
                         <label className={cx('form-label')}>Giá bán:</label>
                         <CurrencyFormat
@@ -133,8 +140,6 @@ function UpdatePerfume() {
                             required
                         />
                     </div>
-                </div>
-                <div className="row">
                     <div className="mb-3 col-md-6">
                         <label className={cx('form-label')}>Dung tích:</label>
                         <select
@@ -152,13 +157,27 @@ function UpdatePerfume() {
                             <option value="200ml">200ml</option>
                         </select>
                     </div>
+                </div>
+                <div className="row">
                     <div className="mb-3 col-md-6">
-                        <label className={cx('form-label')}>Số lượng:</label>
+                        <label className={cx('form-label')}>Số lượng kho:</label>
                         <input
                             type="number"
                             className={cx('form-control')}
                             name="soluong"
                             value={perfume.soluong}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-3 col-md-6">
+                        <label className={cx('form-label')}>Đã bán:</label>
+                        <input
+                            type="number"
+                            className={cx('form-control')}
+                            name="soluongban"
+                            value={perfume.soluongban}
                             onChange={handleChange}
                             required
                         />
@@ -222,13 +241,19 @@ function UpdatePerfume() {
                 </div>
                 <div className="mb-3">
                     <label className={cx('form-label')}>Mô tả:</label>
-                    <textarea
-                        className={cx('form-control')}
-                        name="mota"
-                        value={perfume.mota}
-                        onChange={handleChange}
-                        required
-                    ></textarea>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        data={perfume.mota}
+                        onChange={(event, editor) => handleDescriptionChange(editor.getData(), 'mota')}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label className={cx('form-label')}>Mô tả chi tiết:</label>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        data={perfume.motact}
+                        onChange={(event, editor) => handleDescriptionChange(editor.getData(), 'motact')}
+                    />
                 </div>
 
                 <Link to={'/admin/qlsp'} className={cx('btn', 'btn-warning', 'btn-add')}>

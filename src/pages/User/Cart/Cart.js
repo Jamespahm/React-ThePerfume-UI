@@ -182,7 +182,9 @@ function Cart() {
                                         </tbody>
                                     </table>
                                 ) : (
-                                    <h1>Bạn chưa đăng nhập</h1>
+                                    <h2>
+                                        Bạn chưa <Link to={'/login'}> đăng nhập !</Link>
+                                    </h2>
                                 )}
                             </div>
                             <div className={cx('row')}>

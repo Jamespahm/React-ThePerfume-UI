@@ -1,0 +1,173 @@
+import { useState, useEffect } from 'react';
+
+import request from '~/utils/request';
+import './Dashboard.css';
+
+function Dashboard() {
+    const [revenue, setRevenue] = useState([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const res = await request.get('/statistic/revenue');
+                setRevenue(res.data);
+            } catch (error) {
+                console.log('error', error);
+            }
+        };
+        fetchUsers();
+    }, []);
+    return (
+        <div className="row mt-5">
+            {revenue.map((rev, index) => (
+                <p key={index + 1}>
+                    Doanh Thu : {rev.month} - {rev.totalRevenue}
+                </p>
+            ))}
+            <div className="col-6">
+                <div className="card-chart">
+                    <div className="chart">
+                        <div className="bar" style={{ height: '40%' }}>
+                            <span>40%</span>
+                        </div>
+                        <div className="bar" style={{ height: '25%' }}>
+                            <span>25%</span>
+                        </div>
+                        <div className="bar" style={{ height: '40%' }}>
+                            <span>40%</span>
+                        </div>
+                        <div className="bar" style={{ height: '55%' }}>
+                            <span>55%</span>
+                        </div>
+                        <div className="bar" style={{ height: '40%' }}>
+                            <span>40%</span>
+                        </div>
+                        <div className="bar" style={{ height: '60%' }}>
+                            <span>60%</span>
+                        </div>
+                        <div className="bar" style={{ height: '50%' }}>
+                            <span>50%</span>
+                        </div>
+                        <div className="bar" style={{ height: '90%' }}>
+                            <span>90%</span>
+                        </div>
+                        <div className="bar" style={{ height: '5%' }}>
+                            <span>0%</span>
+                        </div>
+                        <div className="bar" style={{ height: '5%' }}>
+                            <span>0%</span>
+                        </div>
+                    </div>
+                    <div className="info">
+                        <h2>Doanh số bán nước hoa</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div className="col-6">
+                <div className="card-chart">
+                    <div className="line-chart">
+                        <svg viewBox="0 0 450 200" xmlns="http://www.w3.org/2000/svg">
+                            <polyline
+                                points="0,150 50,130 100,135 150,145 200,130 250,160 300,110 350,100 400,55"
+                                fill="none"
+                                stroke="white"
+                                strokeWidth="4"
+                            />
+                            <circle cx="0" cy="150" r="4" fill="white" />
+                            <circle cx="50" cy="130" r="4" fill="white" />
+                            <circle cx="100" cy="135" r="4" fill="white" />
+                            <circle cx="150" cy="145" r="4" fill="white" />
+                            <circle cx="200" cy="130" r="4" fill="white" />
+                            <circle cx="250" cy="160" r="4" fill="white" />
+                            <circle cx="300" cy="110" r="4" fill="white" />
+                            <circle cx="350" cy="100" r="4" fill="white" />
+                            <circle cx="400" cy="55" r="4" fill="white" />
+                        </svg>
+                    </div>
+                    <div className="line-info">
+                        <h2>Doanh thu bán nước hoa</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default Dashboard;
+
+
+
+
+
+
+
+.card-chart {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%; /* Thay đổi kích thước cho phù hợp với giao diện linh hoạt */
+    max-width: 560px; /* Tối đa kích thước */
+    margin: 0 auto; /* Canh giữa */
+}
+
+.chart {
+    background-color: #ffa726;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 260px;
+}
+
+.bar {
+    width: 30px;
+    position: relative;
+    background-color: #fff;
+    text-align: center;
+    font-size: 14px;
+}
+
+.bar span {
+    position: absolute;
+    font-size: 14px;
+    color: #000;
+    transform: translateX(-50%);
+    top: -18px;
+}
+
+.info {
+    padding: 20px;
+    text-align: center;
+    background-color: #fff;
+}
+
+.info h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.line-chart {
+    background-color: #2ecc71;
+    padding: 20px;
+    position: relative;
+    height: 260px;
+}
+
+.line-chart svg {
+    width: 100%;
+    height: 100%;
+}
+
+.line-info {
+    padding: 20px;
+    text-align: center;
+    background-color: #fff;
+}
+
+.line-info h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}

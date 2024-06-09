@@ -4,21 +4,31 @@ import { Link, Navigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
-    const [sdt, setSdt] = useState('');
+    const [tenDN, setTenDN] = useState('');
     const [matkhau, setMatkhau] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async () => {
+        if (!tenDN || !matkhau) {
+            setError('Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu');
+            return;
+        }
+
         try {
-            const response = await request.post('/auth/login', { sdt, matkhau });
+            const response = await request.post('/auth/login', { tenDN, matkhau });
             console.log(response.data);
             const tokenUser = response.data.tokenUser;
             localStorage.setItem('tokenUser', tokenUser); // Lưu tokenUser vào localStorage
             setLoggedIn(true);
         } catch (error) {
-            setError(error.response.data.error);
+            setError(error.response?.data?.error || 'Đã xảy ra lỗi');
         }
+    };
+
+    const handleShowPW = () => {
+        setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
     if (loggedIn) {
@@ -41,29 +51,37 @@ const Login = () => {
                             className="login-input"
                             type="text"
                             autoComplete="off"
-                            placeholder="Email hoặc số điện thoại"
+                            placeholder="Username hoặc số điện thoại"
                             title="Vui lòng nhập email hoặc số điện thoại"
-                            required
-                            value={sdt}
-                            onChange={(e) => setSdt(e.target.value)}
+                            value={tenDN}
+                            onChange={(e) => setTenDN(e.target.value)}
                         />
                         <input
                             className="login-input"
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             autoComplete="off"
                             placeholder="Mật khẩu"
                             title="Vui lòng nhập mật khẩu"
-                            required
                             value={matkhau}
                             onChange={(e) => setMatkhau(e.target.value)}
                         />
+                        <input
+                            className="custom-checkbox"
+                            name="showpw"
+                            type="checkbox"
+                            checked={showPassword}
+                            onChange={handleShowPW}
+                            id="showpw"
+                        />
+                        <label className="checkbox-label" htmlFor="showpw">
+                            Hiển thị mật khẩu
+                        </label>
                         <button className="register" onClick={handleLogin}>
                             Đăng nhập
                         </button>
                         {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
-
                         <p className="wthree w3l">
-                            Bạn chưa có tài khoản ? <Link to="/HTML/registeruser.html"> tạo tài khoản</Link>
+                            Bạn chưa có tài khoản ? <Link to="/register"> tạo tài khoản</Link>
                         </p>
                     </div>
                     <div className="clear"></div>

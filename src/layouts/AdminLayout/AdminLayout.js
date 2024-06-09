@@ -3,6 +3,13 @@ import { useState } from 'react';
 import className from 'classnames/bind';
 import styles from './AdminLayout.module.scss';
 import { Link } from 'react-router-dom';
+import { RxDashboard } from 'react-icons/rx';
+import { AiTwotoneShop } from 'react-icons/ai';
+import { GoProjectRoadmap } from 'react-icons/go';
+import { BsBox } from 'react-icons/bs';
+import { BiCategory } from 'react-icons/bi';
+import { PiUserSquare } from 'react-icons/pi';
+// import { ImStatsDots } from 'react-icons/im';
 
 import images from '~/assets/img';
 const cx = className.bind(styles);
@@ -26,8 +33,7 @@ function AdminLayout({ children }) {
                         <ul className={cx('nav')}>
                             <li className={cx(`nav-item`, `${activeTab === 'tab-1' ? 'active' : ''}`)}>
                                 <Link className={cx('nav-link')} to={'/admin'} onClick={() => handleTabClick('tab-1')}>
-                                    <i className={cx('nc-icon', 'nc-icon', 'nc-paper-2')}></i>
-                                    <p>Dashboard</p>
+                                    <RxDashboard className={cx('nav-icon')} /> <p>Dashboard</p>
                                 </Link>
                             </li>
                             <li className={cx(`nav-item`, `${activeTab === 'tab-2' ? 'active' : ''}`)}>
@@ -36,7 +42,7 @@ function AdminLayout({ children }) {
                                     to={'/admin/qlsp'}
                                     onClick={() => handleTabClick('tab-2')}
                                 >
-                                    <i className={cx('nc-icon', 'nc-bell-55')}></i>
+                                    <BsBox className={cx('nav-icon')} />
                                     <p>Quản lý Nước hoa</p>
                                 </Link>
                             </li>
@@ -46,7 +52,7 @@ function AdminLayout({ children }) {
                                     to={'/admin/qlhd'}
                                     onClick={() => handleTabClick('tab-3')}
                                 >
-                                    <i className={cx('nc-icon', 'nc-icon', 'nc-paper-2')}></i>
+                                    <GoProjectRoadmap className={cx('nav-icon')} />
                                     <p>Quản lý Hóa đơn</p>
                                 </Link>
                             </li>
@@ -56,32 +62,40 @@ function AdminLayout({ children }) {
                                     to={'/admin/qlkh'}
                                     onClick={() => handleTabClick('tab-4')}
                                 >
-                                    <i className={cx('nc-icon', 'nc-bell-55')}></i>
+                                    <PiUserSquare className={cx('nav-icon')} />
                                     <p>Quản lý Khách hàng</p>
                                 </Link>
                             </li>
                             <li className={cx(`nav-item`, `${activeTab === 'tab-5' ? 'active' : ''}`)}>
-                                <Link className={cx('nav-link')} to="" onClick={() => handleTabClick('tab-5')}>
-                                    <i className={cx('nc-icon', 'nc-icon', 'nc-paper-2')}></i>
+                                <Link
+                                    className={cx('nav-link')}
+                                    to={'/admin/qlth'}
+                                    onClick={() => handleTabClick('tab-5')}
+                                >
+                                    <AiTwotoneShop className={cx('nav-icon')} />
                                     <p>Quản lý Thương hiệu</p>
                                 </Link>
                             </li>
                             <li className={cx(`nav-item`, `${activeTab === 'tab-6' ? 'active' : ''}`)}>
-                                <Link className={cx('nav-link')} to="" onClick={() => handleTabClick('tab-6')}>
-                                    <i className={cx('nc-icon', 'nc-bell-55')}></i>
+                                <Link
+                                    className={cx('nav-link')}
+                                    to={'/admin/qll'}
+                                    onClick={() => handleTabClick('tab-6')}
+                                >
+                                    <BiCategory className={cx('nav-icon')} />
                                     <p>Quản lý Loại</p>
                                 </Link>
                             </li>
-                            <li className={cx(`nav-item`, `${activeTab === 'tab-7' ? 'active' : ''}`)}>
+                            {/* <li className={cx(`nav-item`, `${activeTab === 'tab-7' ? 'active' : ''}`)}>
                                 <Link
                                     className={cx('nav-link', 'active')}
                                     to=""
                                     onClick={() => handleTabClick('tab-7')}
                                 >
-                                    <i className={cx('nc-icon', 'nc-alien-33')}></i>
+                                    <ImStatsDots className={cx('nav-icon')} />
                                     <p>Thống kê dữ liệu</p>
                                 </Link>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
                 </div>

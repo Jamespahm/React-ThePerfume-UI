@@ -16,7 +16,9 @@ function Checkout() {
     const [diaChiNhan, setDiaChiNhan] = useState('');
     const [thanhToan, setThanhToan] = useState('');
     const [user, setUser] = useState(null);
+    const ship = 25000;
     const [message, setMessage] = useState('');
+    const [copySuccess, setCopySuccess] = useState(false);
     const tokenUser = localStorage.getItem('tokenUser');
     const location = useLocation();
     const navigate = useNavigate();
@@ -29,14 +31,18 @@ function Checkout() {
     };
 
     const handleCheckout = async () => {
+        if (!thanhToan) {
+            setMessage('Vui lòng chọn hình thức thanh toán !');
+            return;
+        }
         try {
-            if (items.length > 0) {
+            if (items && items.length > 0) {
                 const item = items[0];
                 await request.post(
                     '/payment/checkoutSingle',
                     {
                         idNH: item.idNH,
-                        soLuong: item.soLuong,
+                        soLuong: totalQuantity,
                         tenNhan,
                         sdtNhan,
                         diaChiNhan,
@@ -92,6 +98,19 @@ function Checkout() {
         fetchUserProfile();
     }, [tokenUser]);
 
+    const handleCopy = () => {
+        const textToCopy = `${tenNhan} - ${sdtNhan}`;
+        navigator.clipboard
+            .writeText(textToCopy)
+            .then(() => {
+                setCopySuccess(true);
+                setTimeout(() => setCopySuccess(false), 1000); // Reset state after 1s
+            })
+            .catch((err) => {
+                setMessage('Sao chép thất bại!');
+            });
+    };
+
     if (!user) {
         return null; // Trả về null hoặc loading spinner khi user chưa được tải về
     }
@@ -135,7 +154,7 @@ function Checkout() {
                             }}
                         >
                             <div className={cx('row')}>
-                                <div className={cx('col-lg-7', 'col-md-6')}>
+                                <div className={cx('col-lg-6', 'col-md-6')}>
                                     <div className={cx('row')}>
                                         <div className={cx('checkout__input')}>
                                             <label htmlFor="tenNhan" className={cx('form-label')}>
@@ -151,6 +170,7 @@ function Checkout() {
                                                 className={cx('form-control')}
                                                 autoComplete="off"
                                                 required
+                                                placeholder="Họ tên"
                                             />
                                         </div>
                                         <div className={cx('checkout__input')}>
@@ -160,13 +180,17 @@ function Checkout() {
                                                 </p>
                                             </label>
                                             <input
-                                                type="number"
+                                                type="tel"
                                                 id="sdtNhan"
                                                 value={sdtNhan}
                                                 onChange={(e) => setSdtNhan(e.target.value)}
+                                                maxLength={10}
+                                                pattern="^0[0-9]{9}"
+                                                title="Số điện thoại phải gồm 10 chữ số."
                                                 className={cx('form-control')}
                                                 autoComplete="off"
                                                 required
+                                                placeholder="Số điện thoại"
                                             />
                                         </div>
                                         <div className={cx('checkout__input')}>
@@ -183,42 +207,81 @@ function Checkout() {
                                                 className={cx('form-control')}
                                                 autoComplete="off"
                                                 required
+                                                placeholder="Địa chỉ (Tên đường, Phường/Xã, Quận/Huyện, Tỉnh/Thành Phố)"
                                             />
                                         </div>
-                                        <div className={cx('checkout__input')}>
+                                        <div className={cx('checkout__input__checkbox')}>
                                             <label htmlFor="thanhToan" className={cx('form-label')}>
                                                 <p>
-                                                    Thanh toán<span>*</span>
+                                                    Thanh toán<span>* </span>
+                                                    {message && <span>{message}</span>}
                                                 </p>
                                             </label>
-                                            <select
-                                                id="thanhToan"
-                                                value={thanhToan}
-                                                onChange={(e) => setThanhToan(e.target.value)}
-                                                className={cx('form-control')}
-                                                required
-                                            >
-                                                <option value="">Chọn phương thức thanh toán</option>
-                                                <option value="Thanh toán khi nhận hàng">
-                                                    Thanh toán khi nhận hàng
-                                                </option>
-                                                <option value="Thanh toán qua paypal">Thanh toán qua Paypal</option>
-                                                <option value="Thẻ tín dụng">Thẻ tín dụng</option>
-                                            </select>
+
+                                            <div className={cx('payment-options')}>
+                                                <label className={cx('payment-option')}>
+                                                    <div>
+                                                        <input
+                                                            type="radio"
+                                                            name="payment"
+                                                            value="cod"
+                                                            onChange={(e) => setThanhToan(e.target.value)}
+                                                        />
+                                                        Thanh toán khi nhận hàng (COD)
+                                                    </div>
+                                                </label>
+                                                <label className={cx('payment-option')}>
+                                                    <div className={cx('payment-bank')}>
+                                                        <input
+                                                            type="radio"
+                                                            name="payment"
+                                                            value="banking"
+                                                            onChange={(e) => setThanhToan(e.target.value)}
+                                                        />
+                                                        Chuyển Khoản Ngân Hàng
+                                                        <div className={cx('bank-details')}>
+                                                            <p>
+                                                                Quý Khách Hàng vui lòng chuyển khoản theo thông tin bên
+                                                                dưới
+                                                            </p>
+                                                            <p>Tài Khoản MB Bank (Ngân Hàng Quân Đội)</p>
+                                                            <p>
+                                                                <strong>0866866540</strong>
+                                                            </p>
+                                                            <p>Pham Huy Hoang</p>
+                                                            <p>
+                                                                Nội Dung: {tenNhan} - {sdtNhan}
+                                                                <button
+                                                                    type="button"
+                                                                    className={cx('btn-copy')}
+                                                                    onClick={handleCopy}
+                                                                >
+                                                                    {copySuccess ? 'Đã sao chép' : 'Sao chép'}
+                                                                </button>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className={cx('col-lg-5', 'col-md-6')}>
+                                <div className={cx('col-lg-6', 'col-md-6')}>
                                     <div className={cx('checkout__order')}>
                                         <h4 className={cx('order__title')}>Đơn Hàng Của Bạn</h4>
-                                        <div className={cx('checkout__order__products')}>
-                                            Sản Phẩm
-                                            <span>Giá</span>
-                                        </div>
-                                        <ul className={cx('checkout__total__products')}>
-                                            {(items.length > 0 ? items : cartItems).map((item, index) => (
+
+                                        <ul className={cx('checkout__order__items')}>
+                                            {(items && items.length > 0 ? items : cartItems).map((item) => (
                                                 <li key={item.idNH || item.idGH}>
-                                                    {index + 1}. {item.tenNH}
+                                                    <img
+                                                        src={`http://localhost:8080/img/products/${item.hinhanh1}`}
+                                                        alt=""
+                                                    />
+                                                    <div className={cx('quantity')}>{item.soLuong}</div>
+                                                    <div className={cx('checkout__order__items--detail')}>
+                                                        <h5> {item.tenNH}</h5>
+                                                        <p>{item.dungtich}</p>
+                                                    </div>{' '}
                                                     <CurrencyFormat
                                                         value={item.giaban}
                                                         displayType={'text'}
@@ -229,17 +292,50 @@ function Checkout() {
                                         </ul>
                                         <ul className={cx('checkout__total__all')}>
                                             <li>
-                                                Số lượng <span>{totalQuantity}</span>
+                                                Tổng tiền sản phẩm{' '}
+                                                <span>
+                                                    {' '}
+                                                    <span>
+                                                        <CurrencyFormat
+                                                            value={totalAmount}
+                                                            displayType={'text'}
+                                                            thousandSeparator={true}
+                                                            suffix={''}
+                                                        />
+                                                    </span>
+                                                </span>
                                             </li>
                                             <li>
-                                                Tổng
+                                                Vận chuyển{' '}
                                                 <span>
-                                                    <CurrencyFormat
-                                                        value={totalAmount}
-                                                        displayType={'text'}
-                                                        thousandSeparator={true}
-                                                        suffix={' VND'}
-                                                    />
+                                                    {totalQuantity > 1 ? (
+                                                        'MIỄN PHÍ'
+                                                    ) : (
+                                                        <CurrencyFormat
+                                                            value={ship}
+                                                            displayType={'text'}
+                                                            thousandSeparator={true}
+                                                        />
+                                                    )}
+                                                </span>
+                                            </li>
+                                            <li>
+                                                TỔNG TIỀN
+                                                <span>
+                                                    {totalQuantity > 1 ? (
+                                                        <CurrencyFormat
+                                                            value={totalAmount}
+                                                            displayType={'text'}
+                                                            thousandSeparator={true}
+                                                        />
+                                                    ) : (
+                                                        <CurrencyFormat
+                                                            value={totalAmount}
+                                                            displayType={'text'}
+                                                            thousandSeparator={true}
+                                                            suffix={' VND'}
+                                                        />
+                                                    )}
                                                 </span>
                                             </li>
                                         </ul>
@@ -251,7 +347,6 @@ function Checkout() {
                                 </div>
                             </div>
                         </form>
-                        {message && <p>{message}</p>}
                     </div>
                 </div>
             </section>

@@ -6,6 +6,7 @@ const adminRoutes = {
     updateperfume: '/updateperfume/:id',
 
     qlkh: '/qlkh',
+    detailhd: '/detailhd/:id',
     trashuser: '/trashuser',
     createuser: '/createuser',
     updateuser: '/updateuser/:id',
@@ -15,7 +16,15 @@ const adminRoutes = {
     createorder: '/createorder',
     updateorder: '/updateorder/:id',
 
-    detailhd: '/detailhd/:id',
+    qlth: '/qlth',
+    trashbrand: '/trashbrand',
+    createbrand: '/createbrand',
+    updatebrand: '/updatebrand/:id',
+
+    qll: '/qll',
+    trashcategory: '/trashcategory',
+    createcategory: '/createcategory',
+    updatecategory: '/updatecategory/:id',
 };
 
 export default adminRoutes;

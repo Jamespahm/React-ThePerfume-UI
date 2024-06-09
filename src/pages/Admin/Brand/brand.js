@@ -10,10 +10,10 @@ import { FaCircleXmark } from 'react-icons/fa6';
 
 const cx = classNames.bind(styles);
 
-function QLKH() {
+function QLTH() {
     const [searchValue, setSearchValue] = useState('');
     const inputRef = useRef();
-    const [users, setUser] = useState([]);
+    const [brands, setBrand] = useState([]);
     const [sortBy, setSortBy] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
     const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +22,7 @@ function QLKH() {
     const navigator = useNavigate();
 
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchBrands = async () => {
             try {
                 const params = {
                     sortBy,
@@ -31,15 +31,15 @@ function QLKH() {
                     limit: itemsPerPage,
                 };
                 if (searchValue === '') {
-                    const res = await request.get('/user', { params });
-                    setUser(res.data.users);
+                    const res = await request.get('/brand', { params });
+                    setBrand(res.data.brands);
                     setTotalPages(res.data.totalPages);
                 }
             } catch (error) {
                 console.log('error', error);
             }
         };
-        fetchUsers();
+        fetchBrands();
     }, [sortBy, sortOrder, currentPage, searchValue]);
 
     useEffect(() => {
@@ -55,8 +55,8 @@ function QLKH() {
                     page: currentPage,
                     limit: itemsPerPage,
                 };
-                const res = await request.get('/user/search', { params });
-                setUser(res.data.users);
+                const res = await request.get('/brand/search', { params });
+                setBrand(res.data.brands);
                 setTotalPages(res.data.totalPages);
             } catch (error) {
                 console.log('error', error);
@@ -87,27 +87,27 @@ function QLKH() {
 
     const handleSoftDeleteItem = async (id) => {
         try {
-            let text = 'Xóa khách hàng ?';
+            let text = 'Xóa thương hiệu ?';
             if (window.confirm(text) === true) {
-                await request.put(`/user/${id}/delete`);
-                // Sau khi xóa thành công, cập nhật lại danh sách khách hàng trong giỏ hàng
-                const updatedCartItems = users.filter((item) => item.idKH !== id);
-                setUser(updatedCartItems);
+                await request.put(`/brand/${id}/delete`);
+                // Sau khi xóa thành công, cập nhật lại danh sách thương hiệu trong giỏ hàng
+                const updatedCartItems = brands.filter((item) => item.idTH !== id);
+                setBrand(updatedCartItems);
             } else {
-                return; // Trả về khách hàng với số lượng = 1 nếu không xác nhận xóa
+                return; // Trả về thương hiệu với số lượng = 1 nếu không xác nhận xóa
             }
         } catch (error) {
             console.log('error', error);
         }
     };
 
-    const handleUpdateUser = (id) => {
+    const handleUpdateBrand = (id) => {
         // Chuyển hướng đến trang chi tiết hóa đơn và truyền id hóa đơn
-        navigator(`/admin/updateuser/${id}`);
+        navigator(`/admin/updatebrand/${id}`);
     };
 
     console.log('page: ', totalPages);
-    console.log('users: ', users);
+    console.log('brands: ', brands);
 
     return (
         <>
@@ -115,11 +115,11 @@ function QLKH() {
                 <div className="col-md-12">
                     <div className="card strpied-tabled-with-hover">
                         <div className={cx('card-header-table')}>
-                            <h4 className={cx('card-title')}>Khách hàng</h4>
-                            <Link className={cx('card-link')} to={'/admin/createuser'}>
+                            <h4 className={cx('card-title')}>Thương hiệu</h4>
+                            <Link className={cx('card-link')} to={'/admin/createbrand'}>
                                 Thêm mới
                             </Link>
-                            <Link className={cx('card-link')} to={'/admin/trashuser'}>
+                            <Link className={cx('card-link')} to={'/admin/trashbrand'}>
                                 Thùng rác
                             </Link>
                             <div className={cx('shop__sidebar__search')}>
@@ -154,95 +154,54 @@ function QLKH() {
                             <table className="table table-hover table-striped">
                                 <thead>
                                     <tr>
-                                        <th className="col-1">Hình ảnh</th>
+                                        <th className="col-3">Hình ảnh</th>
                                         <th scope="col">
-                                            <button className={cx('sort-btn')} onClick={() => handleSort('tenKH')}>
-                                                Tên khách hàng{'  '}
-                                                {sortBy === 'tenKH' && sortOrder === 'desc' ? (
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('tenTH')}>
+                                                Tên thương hiệu{'  '}
+                                                {sortBy === 'tenTH' && sortOrder === 'desc' ? (
                                                     <i className="fa-duotone fa-sort-down"></i>
-                                                ) : sortBy === 'tenKH' && sortOrder === 'asc' ? (
+                                                ) : sortBy === 'tenTH' && sortOrder === 'asc' ? (
                                                     <i className="fa-duotone fa-sort-up"></i>
                                                 ) : (
                                                     <i className="fa-solid fa-sort"></i>
                                                 )}
                                             </button>
                                         </th>
+
                                         <th>
-                                            <button className={cx('sort-btn')} onClick={() => handleSort('gioitinh')}>
-                                                Giới tính{' '}
-                                                {sortBy === 'gioitinh' && sortOrder === 'desc' ? (
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('xuatxu')}>
+                                                Xuất xứ{' '}
+                                                {sortBy === 'xuatxu' && sortOrder === 'desc' ? (
                                                     <i className="fa-duotone fa-sort-down"></i>
-                                                ) : sortBy === 'gioitinh' && sortOrder === 'asc' ? (
+                                                ) : sortBy === 'xuatxu' && sortOrder === 'asc' ? (
                                                     <i className="fa-duotone fa-sort-up"></i>
                                                 ) : (
                                                     <i className="fa-solid fa-sort"></i>
                                                 )}
                                             </button>
                                         </th>
-                                        <th>
-                                            <button className={cx('sort-btn')} onClick={() => handleSort('tenDN')}>
-                                                Tên đăng nhập{' '}
-                                                {sortBy === 'tenDN' && sortOrder === 'desc' ? (
-                                                    <i className="fa-duotone fa-sort-down"></i>
-                                                ) : sortBy === 'tenDN' && sortOrder === 'asc' ? (
-                                                    <i className="fa-duotone fa-sort-up"></i>
-                                                ) : (
-                                                    <i className="fa-solid fa-sort"></i>
-                                                )}
-                                            </button>
-                                        </th>
-                                        <th>
-                                            <button className={cx('sort-btn')} onClick={() => handleSort('sdt')}>
-                                                Số điện thoại{' '}
-                                                {sortBy === 'sdt' && sortOrder === 'desc' ? (
-                                                    <i className="fa-duotone fa-sort-down"></i>
-                                                ) : sortBy === 'sdt' && sortOrder === 'asc' ? (
-                                                    <i className="fa-duotone fa-sort-up"></i>
-                                                ) : (
-                                                    <i className="fa-solid fa-sort"></i>
-                                                )}
-                                            </button>
-                                        </th>
-                                        <th>
-                                            <button className={cx('sort-btn')} onClick={() => handleSort('email')}>
-                                                Email{' '}
-                                                {sortBy === 'email' && sortOrder === 'desc' ? (
-                                                    <i className="fa-duotone fa-sort-down"></i>
-                                                ) : sortBy === 'email' && sortOrder === 'asc' ? (
-                                                    <i className="fa-duotone fa-sort-up"></i>
-                                                ) : (
-                                                    <i className="fa-solid fa-sort"></i>
-                                                )}
-                                            </button>
-                                        </th>
-                                        <th scope="col">Mật khẩu</th>
+
                                         <th scope="col">Tùy chọn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users.map((user) => (
-                                        <tr key={user.idKH}>
+                                    {brands.map((brand) => (
+                                        <tr key={brand.idTH}>
                                             <td>
-                                                <img src={`http://localhost:8080/img/user-avt/${user.avatar}`} alt="" />
+                                                <img src={`http://localhost:8080/img/banner/${brand.hinhanh}`} alt="" />
                                             </td>
-                                            <td>{user.tenKH}</td>
-                                            <td>{user.gioitinh}</td>
-                                            <td>{user.tenDN}</td>
-                                            <td>{user.sdt}</td>
-                                            <td>{user.email}</td>
-                                            <td>{user.matkhau}</td>
+                                            <td>{brand.tenTH}</td>
+                                            <td>{brand.xuatxu}</td>
+
                                             <td>
-                                                {/* <button className={cx('table-btn', '')}>
-                                                    <FaEye />
-                                                </button> */}
                                                 <button
-                                                    onClick={() => handleUpdateUser(user.idKH)}
+                                                    onClick={() => handleUpdateBrand(brand.idTH)}
                                                     className={cx('table-btn', '')}
                                                 >
                                                     <FaRegEdit />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleSoftDeleteItem(user.idKH)}
+                                                    onClick={() => handleSoftDeleteItem(brand.idTH)}
                                                     className={cx('table-btn', '')}
                                                 >
                                                     <FaTrashAlt />
@@ -276,4 +235,4 @@ function QLKH() {
     );
 }
 
-export default QLKH;
+export default QLTH;

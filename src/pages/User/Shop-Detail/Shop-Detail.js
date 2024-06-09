@@ -1,5 +1,3 @@
-// , totalAmount: perfume.giaban * quantity, totalQuantity: quantity
-
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
@@ -10,27 +8,21 @@ import request from '~/utils/request';
 import styles from './Shop-Detail.module.scss';
 
 import { IoStar, IoStarOutline, IoStarHalf } from 'react-icons/io5';
-import { FaExchangeAlt, FaHeart } from 'react-icons/fa';
+import { FaPlus, FaMinus } from 'react-icons/fa6';
+import ProductItem from '~/components/ProductItem';
 
 const cx = classNames.bind(styles);
 
 function ShopDetail() {
     const [activeTab, setActiveTab] = useState('tabs-1');
-    const navigate = useNavigate();
-
-    const handleTabClick = (tabId) => {
-        setActiveTab(tabId);
-    };
-
-    const [quantity, setQuantity] = useState('1'); // Khởi tạo state cho giá trị quantity
-
-    const handleQuantityChange = (event) => {
-        setQuantity(event.target.value); // Cập nhật giá trị quantity khi có sự thay đổi
-    };
-
+    const [activeContentTab, setActiveContentTab] = useState('tabs-5');
+    const [selectedSize, setSelectedSize] = useState('100ml'); // Giá trị mặc định
+    const [quantity, setQuantity] = useState(1); // Khởi tạo state cho giá trị quantity
     const { slug } = useParams();
     const [perfume, setPerfume] = useState();
-    // const [cartItems, setCartItems] = useState([]);
+    const [perfumeRelated, setPerfumeRelated] = useState([]);
+    const tokenUser = localStorage.getItem('tokenUser'); // Lấy tokenUser từ localStorage
+    const navigate = useNavigate();
 
     useEffect(() => {
         request
@@ -45,60 +37,111 @@ function ShopDetail() {
             });
     }, [slug]);
 
-    // console.log('cartItems:', cartItems);
+    useEffect(() => {
+        request
+            .get(`perfume/related/${slug}`)
+            .then((res) => {
+                console.log('L3:', res.data.relatedPerfumes);
+                setPerfumeRelated(res.data.relatedPerfumes);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+    }, [slug]);
+
     // Kiểm tra xem perfume có tồn tại không trước khi render
     if (!perfume) {
         return;
     }
 
+    const handleTabClick = (tabId) => {
+        setActiveTab(tabId);
+    };
+    const handleContentTabClick = (tabId) => {
+        setActiveContentTab(tabId);
+    };
+    const handleChange = (event) => {
+        setSelectedSize(event.target.id);
+    };
+
+    const handleQuantityChange = (event) => {
+        setQuantity(event.target.value); // Cập nhật giá trị quantity khi có sự thay đổi
+    };
+    const handleIncrease = () => {
+        setQuantity(quantity + 1); // Cập nhật giá trị quantity khi có sự thay đổi
+    };
+    const handleDecrease = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1); // Cập nhật giá trị quantity khi có sự thay đổi
+        }
+    };
     const addToCart = (idNH, soLuong) => {
-        const tokenUser = localStorage.getItem('tokenUser'); // Lấy tokenUser từ localStorage
+        if (tokenUser) {
+            const data = {
+                productId: idNH,
+                quantity: soLuong,
+            };
 
-        // Dữ liệu cần gửi đi
-        const data = {
-            productId: idNH,
-            quantity: soLuong,
-        };
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${tokenUser}`, // Thêm token vào header Authorization
+                },
+            };
 
-        // Cấu hình các thông số của yêu cầu POST
-        const config = {
-            headers: {
-                Authorization: `Bearer ${tokenUser}`, // Thêm token vào header Authorization
-            },
-        };
-
-        // Gửi yêu cầu POST đến endpoint /cart/add
-        request
-            .post('/cart/add', data, config)
-            .then((response) => {
-                // Xử lý kết quả từ server (nếu cần)
-                console.log(response.data.message);
-                navigate('/cart');
-            })
-            .catch((error) => {
-                // Xử lý lỗi (nếu có)
-                console.error('Error:', error);
-            });
+            request
+                .post('/cart/add', data, config)
+                .then((response) => {
+                    console.log(response.data.message);
+                    navigate('/cart');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        } else {
+            navigate('/login');
+        }
     };
 
     const handleBuyNow = () => {
-        navigate('/checkout', {
-            state: {
-                items: [
-                    {
-                        idNH: perfume.idNH,
-                        tenNH: perfume.tenNH,
-                        giaban: perfume.giaban,
-                        soLuong: parseInt(quantity),
-                    },
-                ],
-                totalAmount: parseInt(perfume.giaban) * parseInt(quantity),
-                totalQuantity: parseInt(quantity),
-            },
-        });
+        if (tokenUser) {
+            navigate('/checkout', {
+                state: {
+                    items: [
+                        {
+                            idNH: perfume.idNH,
+                            hinhanh1: perfume.hinhanh1,
+                            dungtich: perfume.dungtich,
+                            tenNH: perfume.tenNH,
+                            giaban: perfume.giaban,
+                            soLuong: parseInt(quantity),
+                        },
+                    ],
+                    totalAmount: parseInt(perfume.giaban) * parseInt(quantity),
+                    totalQuantity: parseInt(quantity),
+                },
+            });
+        } else {
+            navigate('/login');
+        }
     };
+
     return (
         <>
+            <style>
+                {`
+                /* Hides the up and down arrows on input[type="number"] in Chrome, Safari, Edge, and Opera */
+                input[type="number"]::-webkit-outer-spin-button,
+                input[type="number"]::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+
+                /* Hides the up and down arrows on input[type="number"] in Firefox */
+                input[type="number"] {
+                    -moz-appearance: textfield;
+                }
+                `}
+            </style>
             <section className={cx('shop-details')}>
                 <div>
                     <div className={cx('product__details__pic')}>
@@ -120,97 +163,30 @@ function ShopDetail() {
                                     </nav>
                                 </div>
                             </div>
-                            <div className={cx('row')}>
-                                <div className={cx('col-lg-3', 'col-md-3')}>
-                                    <ul className={cx('nav', 'nav-tabs')} role="tablist">
-                                        <li className={cx(`nav-item${activeTab === 'tabs-1' ? 'active' : ''}`)}>
-                                            <Link
-                                                className={cx('nav-link')}
-                                                to={''}
-                                                onClick={() => handleTabClick('tabs-1')}
-                                            >
-                                                <div className={cx('product__thumb__pic', 'set-bg')}>
-                                                    <img
-                                                        src={`http://localhost:8080/img/products/${perfume.hinhanh1}`}
-                                                        alt=""
-                                                    />
-                                                </div>
-                                            </Link>
-                                        </li>
-                                        <li className={cx(`nav-item ${activeTab === 'tabs-2' ? 'active' : ''}`)}>
-                                            <Link
-                                                className={cx('nav-link')}
-                                                to={''}
-                                                onClick={() => handleTabClick('tabs-2')}
-                                            >
-                                                <div className={cx('product__thumb__pic', 'set-bg')}>
-                                                    <img
-                                                        src={`http://localhost:8080/img/products/${perfume.hinhanh2}`}
-                                                        alt=""
-                                                    />
-                                                </div>
-                                            </Link>
-                                        </li>
-                                        <li className={`nav-item ${activeTab === 'tabs-3' ? 'active' : ''}`}>
-                                            <Link
-                                                className={cx('nav-link')}
-                                                to={''}
-                                                onClick={() => handleTabClick('tabs-3')}
-                                            >
-                                                <div className={cx('product__thumb__pic', 'set-bg')}>
-                                                    <img
-                                                        src={`http://localhost:8080/img/products/${perfume.hinhanh3}`}
-                                                        alt=""
-                                                    />
-                                                </div>
-                                            </Link>
-                                        </li>
-                                        <li className={cx(`nav-item ${activeTab === 'tabs-4' ? 'active' : ''}`)}>
-                                            <Link
-                                                className={cx('nav-link')}
-                                                to={''}
-                                                onClick={() => handleTabClick('tabs-4')}
-                                            >
-                                                <div className={cx('product__thumb__pic', 'set-bg')}>
-                                                    <img
-                                                        src={`http://localhost:8080/img/products/${perfume.hinhanh4}`}
-                                                        alt=""
-                                                    />
-                                                    <i className={cx('fa fa-play')}></i>
-                                                </div>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
 
-                                <div className={cx('col-lg-6', 'col-md-9')}>
-                                    <div className={cx('tab-content')}>
-                                        <div className={`tab-pane ${activeTab === 'tabs-1' ? 'active' : ''}`}>
-                                            <div className={cx('product__details__pic__item')}>
+                            <div className={cx('row')}>
+                                <div className={cx('col-5')}>
+                                    <div className={cx('row')}>
+                                        <div className={cx('tab-content')}>
+                                            <div className={`tab-pane ${activeTab === 'tabs-1' ? 'active' : ''}`}>
                                                 <img
                                                     src={`http://localhost:8080/img/products/${perfume.hinhanh1}`}
                                                     alt=""
                                                 />
                                             </div>
-                                        </div>
-                                        <div className={`tab-pane ${activeTab === 'tabs-2' ? 'active' : ''}`}>
-                                            <div className={cx('product__details__pic__item')}>
+                                            <div className={`tab-pane ${activeTab === 'tabs-2' ? 'active' : ''}`}>
                                                 <img
                                                     src={`http://localhost:8080/img/products/${perfume.hinhanh2}`}
                                                     alt=""
                                                 />
                                             </div>
-                                        </div>
-                                        <div className={`tab-pane ${activeTab === 'tabs-3' ? 'active' : ''}`}>
-                                            <div className={cx('product__details__pic__item')}>
+                                            <div className={`tab-pane ${activeTab === 'tabs-3' ? 'active' : ''}`}>
                                                 <img
                                                     src={`http://localhost:8080/img/products/${perfume.hinhanh3}`}
                                                     alt=""
                                                 />
                                             </div>
-                                        </div>
-                                        <div className={`tab-pane ${activeTab === 'tabs-4' ? 'active' : ''}`}>
-                                            <div className={cx('product__details__pic__item')}>
+                                            <div className={`tab-pane ${activeTab === 'tabs-4' ? 'active' : ''}`}>
                                                 <img
                                                     src={`http://localhost:8080/img/products/${perfume.hinhanh4}`}
                                                     alt=""
@@ -218,23 +194,50 @@ function ShopDetail() {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className={cx('row')}>
+                                        <ul className={cx('nav-tabs')} role="tablist">
+                                            <li className={cx({ active: activeTab === 'tabs-1' })}>
+                                                <img
+                                                    onClick={() => handleTabClick('tabs-1')}
+                                                    src={`http://localhost:8080/img/products/${perfume.hinhanh1}`}
+                                                    alt=""
+                                                />
+                                            </li>
+                                            <li className={cx({ active: activeTab === 'tabs-2' })}>
+                                                <img
+                                                    onClick={() => handleTabClick('tabs-2')}
+                                                    src={`http://localhost:8080/img/products/${perfume.hinhanh2}`}
+                                                    alt=""
+                                                />
+                                            </li>
+                                            <li className={cx({ active: activeTab === 'tabs-3' })}>
+                                                <img
+                                                    onClick={() => handleTabClick('tabs-3')}
+                                                    src={`http://localhost:8080/img/products/${perfume.hinhanh3}`}
+                                                    alt=""
+                                                />
+                                            </li>
+                                            <li className={cx({ active: activeTab === 'tabs-4' })}>
+                                                <img
+                                                    onClick={() => handleTabClick('tabs-4')}
+                                                    src={`http://localhost:8080/img/products/${perfume.hinhanh4}`}
+                                                    alt=""
+                                                />
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={cx('product__details__content')}>
-                        <div className={cx('container')}>
-                            <div className={cx('row', 'd-flex', 'justify-content-center')}>
-                                <div className={cx('col-lg-8')}>
-                                    <div className={cx('product__details__text')}>
-                                        <h3> {perfume.tenNH}</h3>
+                                <div className={cx('col-7', '')}>
+                                    <div className={cx('product__details')}>
+                                        <h3>Nước hoa {perfume.tenNH}</h3>
+
                                         <div className={cx('rating')}>
                                             <IoStar />
                                             <IoStar />
                                             <IoStar />
                                             <IoStarHalf />
                                             <IoStarOutline />
-                                            <span> - 50 Đánh giá</span>
+                                            <span>4.5/50 Đánh giá</span>
                                         </div>
                                         <div className={cx('product__details__price')}>
                                             <CurrencyFormat
@@ -245,42 +248,82 @@ function ShopDetail() {
                                             />
                                             <p> 6,000,000 VND</p>
                                         </div>
-                                        <p>
-                                            Gucci Four Homme Eau de Toilette là một hương thơm nam tính, hiện đại và
-                                            tinh tế được ra mắt vào năm 2016 bởi nhà mốt Gucci lừng danh. Chai nước hoa
-                                            này được lấy cảm hứng từ hình ảnh người đàn ông Gucci hiện đại - mạnh mẽ, tự
-                                            tin và độc lập.
-                                        </p>
+                                        <div
+                                            className={cx('product__details__option__descript')}
+                                            dangerouslySetInnerHTML={{ __html: perfume.mota }}
+                                        />
+
                                         <div className={cx('product__details__option')}>
                                             <div className={cx('product__details__option__size')}>
-                                                <span>Dung tích:</span>
-                                                <label htmlFor="xxl">
+                                                <label
+                                                    className={cx({ active: selectedSize === '150ml' })}
+                                                    htmlFor="150ml"
+                                                >
                                                     150ml
-                                                    <input type="radio" id="xxl" />
+                                                    <input
+                                                        type="radio"
+                                                        name="dungtich"
+                                                        id="150ml"
+                                                        checked={selectedSize === '150ml'}
+                                                        onChange={handleChange}
+                                                    />
                                                 </label>
-                                                <label className={cx('actived')} htmlFor="xl">
+                                                <label
+                                                    className={cx({ active: selectedSize === '100ml' })}
+                                                    htmlFor="100ml"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="dungtich"
+                                                        id="100ml"
+                                                        checked={selectedSize === '100ml'}
+                                                        onChange={handleChange}
+                                                    />
                                                     100ml
-                                                    <input type="radio" id="xl" />
                                                 </label>
-                                                <label htmlFor="l">
+                                                <label
+                                                    className={cx({ active: selectedSize === '50ml' })}
+                                                    htmlFor="50ml"
+                                                >
                                                     50ml
-                                                    <input type="radio" id="l" />
+                                                    <input
+                                                        type="radio"
+                                                        name="dungtich"
+                                                        id="50ml"
+                                                        checked={selectedSize === '50ml'}
+                                                        onChange={handleChange}
+                                                    />
                                                 </label>
-                                                <label htmlFor="sm">
+                                                <label
+                                                    className={cx({ active: selectedSize === '10ml' })}
+                                                    htmlFor="10ml"
+                                                >
                                                     10ml
-                                                    <input type="radio" id="sm" />
+                                                    <input
+                                                        type="radio"
+                                                        name="dungtich"
+                                                        id="10ml"
+                                                        checked={selectedSize === '10ml'}
+                                                        onChange={handleChange}
+                                                    />
                                                 </label>
                                             </div>
                                         </div>
                                         <div className={cx('product__details__cart__option')}>
                                             <div className={cx('quantity')}>
                                                 <div className={cx('pro-qty')}>
+                                                    <button onClick={handleIncrease}>
+                                                        <FaPlus />
+                                                    </button>
                                                     <input
                                                         id="quantity"
-                                                        type="text"
+                                                        type="number"
                                                         value={quantity}
                                                         onChange={handleQuantityChange}
                                                     />
+                                                    <button onClick={handleDecrease}>
+                                                        <FaMinus />
+                                                    </button>
                                                 </div>
                                             </div>
                                             <button
@@ -293,20 +336,7 @@ function ShopDetail() {
                                                 Đặt Hàng
                                             </button>
                                         </div>
-                                        <div className={cx('product__details__btns__option')}>
-                                            <Link to="#">
-                                                <FaHeart />
-                                                Thêm Yêu Thích
-                                            </Link>
-                                            <Link to="#">
-                                                <FaExchangeAlt />
-                                                Thêm So Sánh
-                                            </Link>
-                                        </div>
                                         <div className={cx('product__details__last__option')}>
-                                            <h5>
-                                                <span>Thương Thức Thanh Toán</span>
-                                            </h5>
                                             <img
                                                 src={'http://localhost:8080/img/shop-details/details-payment.png'}
                                                 alt=""
@@ -315,170 +345,75 @@ function ShopDetail() {
                                     </div>
                                 </div>
                             </div>
-                            {/*  */}
+                        </div>
+                    </div>
+                    <div className={cx('product__details__content')}>
+                        <div className={cx('container')}>
                             <div className={cx('row')}>
                                 <div className={cx('col-lg-12')}>
                                     <div className={cx('product__details__tab')}>
                                         <ul className={cx('nav', 'nav-tabs')} role="tablist">
                                             <li className={cx('nav-item')}>
-                                                <Link
-                                                    className={cx('nav-link', 'active')}
-                                                    data-toggle={'tab'}
-                                                    to={'#tabs-5'}
-                                                    role={'tab'}
+                                                <button
+                                                    className={cx('nav-link', {
+                                                        active: activeContentTab === 'tabs-5',
+                                                    })}
+                                                    onClick={() => handleContentTabClick('tabs-5')}
                                                 >
                                                     Thông Tin Chi Tiết
-                                                </Link>
+                                                </button>
                                             </li>
                                             <li className={cx('nav-item')}>
-                                                <Link
-                                                    className={cx('nav-link')}
-                                                    data-toggle={'tab'}
-                                                    to={'#tabs-6'}
-                                                    role={'tab'}
+                                                <button
+                                                    className={cx('nav-link', {
+                                                        active: activeContentTab === 'tabs-6',
+                                                    })}
+                                                    onClick={() => handleContentTabClick('tabs-6')}
                                                 >
-                                                    Khách Hàng Nhận Xét(5)
-                                                </Link>
+                                                    Khách Hàng Đánh Giá(5)
+                                                </button>
                                             </li>
                                             <li className={cx('nav-item')}>
-                                                <Link
-                                                    className={cx('nav-link')}
-                                                    data-toggle={'tab'}
-                                                    to={'#tabs-7'}
-                                                    role={'tab'}
+                                                <button
+                                                    className={cx('nav-link', {
+                                                        active: activeContentTab === 'tabs-7',
+                                                    })}
+                                                    onClick={() => handleContentTabClick('tabs-7')}
                                                 >
                                                     Mô Tả Chi Tiết
-                                                </Link>
+                                                </button>
                                             </li>
                                         </ul>
                                         <div className={cx('tab-content')}>
-                                            <div className={cx('tab-pane active')} id={'tabs-5'} role={'tabpanel'}>
+                                            <div
+                                                className={cx('tab-pane', { actived: activeContentTab === 'tabs-5' })}
+                                                id={'tabs-5'}
+                                                role={'tabpanel'}
+                                            >
                                                 <div className={cx('product__details__tab__content')}>
-                                                    <p className={cx('note')}>
-                                                        Gucci Four Homme Eau de Toilette là một hương thơm nam tính,
-                                                        hiện đại và tinh tế được ra mắt vào năm 2016 bởi nhà mốt Gucci
-                                                        lừng danh. Chai nước hoa này được lấy cảm hứng từ hình ảnh người
-                                                        đàn ông Gucci hiện đại - mạnh mẽ, tự tin và độc lập.
-                                                    </p>
-                                                    <div className={cx('product__details__tab__content__item')}>
-                                                        {/* <h5>Thông tin chi tiết</h5> */}
-                                                        <p className={cx('note')}>Hương thơm:</p>
-                                                        <p>
-                                                            Mở đầu với sự tươi mát, sảng khoái từ cam Bergamot, hoa bách
-                                                            hợp và cây bách. Nổi bật với sự ấm áp, nam tính từ gỗ đàn
-                                                            hương, thuốc lá và tiêu đen. Lắng đọng với sự quyến rũ, bí
-                                                            ẩn từ hoắc hương, hổ phách và da thuộc. Chai nước hoa Gucci
-                                                            Four Homme Eau de Toilette sở hữu thiết kế sang trọng, đẳng
-                                                            cấp với tông màu đen huyền bí. Thân chai được làm bằng thủy
-                                                            tinh dày dặn, đường nét mạnh mẽ, góc cạnh. Nắp chai được
-                                                            thiết kế dạng trụ tròn, màu đen bóng bẩy, có logo Gucci được
-                                                            khắc chìm tinh tế.
-                                                        </p>
-                                                        <p className={cx('note')}>Phong cách:</p>
-                                                        <p>
-                                                            Gucci Four Homme Eau de Toilette phù hợp với những người đàn
-                                                            ông trưởng thành, thành đạt, yêu thích sự sang trọng và tinh
-                                                            tế. Hương thơm này có thể sử dụng vào ban ngày hoặc ban đêm,
-                                                            trong các dịp đặc biệt hoặc sử dụng hàng ngày.
-                                                        </p>
-                                                        <p className={cx('note')}>Độ lưu hương và thành phần:</p>
-                                                        <p>
-                                                            Gucci Four Homme Eau de Toilette có độ lưu hương khá tốt, từ
-                                                            6 đến 8 tiếng trên da. Gucci Four Homme Eau de Toilette có
-                                                            độ tỏa hương trung bình, tạo cảm giác gần gũi và thu hút.
-                                                            Gucci Four Homme Eau de Toilette thuộc nhóm hương Woody
-                                                            Chypre (hương gỗ Chypre). Hương đầu: Cam Bergamot, hoa bách
-                                                            hợp, cây bách. Hương giữa: Gỗ đàn hương, thuốc lá, tiêu đen.
-                                                            Hương cuối: Hoắc hương, hổ phách, da thuộc.
-                                                        </p>
-                                                    </div>
+                                                    <div
+                                                        className={cx('product__details__descript')}
+                                                        dangerouslySetInnerHTML={{ __html: perfume.mota }}
+                                                    />
+                                                    <div
+                                                        className={cx('product__details__tab__content__item')}
+                                                        dangerouslySetInnerHTML={{ __html: perfume.motact }}
+                                                    />
                                                 </div>
                                             </div>
-
-                                            <div className={cx('tab-pane')} id={'tabs-6'} role={'tabpanel'}>
-                                                <div className={cx('product__details__tab__content')}>
-                                                    <div className={cx('product__details__tab__content__item')}>
-                                                        <h5>Products Infomation2</h5>
-                                                        <p>
-                                                            A Pocket PC is a handheld computer, which features many of
-                                                            the same capabilities as a modern PC. These handy little
-                                                            devices allow individuals to retrieve and store e-mail
-                                                            messages, create a contact file, coordinate appointments,
-                                                            surf the internet, exchange text messages and more. Every
-                                                            product that is labeled as a Pocket PC must be accompanied
-                                                            with specific software to operate the unit and must feature
-                                                            a touchscreen and touchpad.
-                                                        </p>
-                                                        <p>
-                                                            As is the case with any new technology product, the cost of
-                                                            a Pocket PC was substantial during it’s early release. For
-                                                            approximately $700.00, consumers could purchase one of
-                                                            top-of-the-line Pocket PCs in 2003. These days, customers
-                                                            are finding that prices have become much more reasonable now
-                                                            that the newness is wearing off. For approximately $350.00,
-                                                            a new Pocket PC can now be purchased.
-                                                        </p>
-                                                    </div>
-                                                    <div className={cx('product__details__tab__content__item')}>
-                                                        <h5>Material used</h5>
-                                                        <p>
-                                                            Polyester is deemed lower quality due to its none natural
-                                                            quality’s. Made from synthetic materials, not natural like
-                                                            wool. Polyester suits become creased easily and are known
-                                                            for not being breathable. Polyester suits tend to have a
-                                                            shine to them compared to wool and cotton suits, this can
-                                                            make the suit look cheap. The texture of velvet is luxurious
-                                                            and breathable. Velvet is a great choice for dinner party
-                                                            jacket and can be worn all year round.
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                            <div
+                                                className={cx('tab-pane', { actived: activeContentTab === 'tabs-6' })}
+                                                id={'tabs-6'}
+                                                role={'tabpanel'}
+                                            >
+                                                {/* Nội dung của Khách Hàng Đánh Giá */}
                                             </div>
-
-                                            <div className={cx('tab-pane')} id={'tabs-7'} role={'tabpanel'}>
-                                                <div className={cx('product__details__tab__content')}>
-                                                    <p className={cx('note')}>
-                                                        Gucci Four Homme Eau de Toilette là một hương thơm nam tính,
-                                                        hiện đại và tinh tế được ra mắt vào năm 2016 bởi nhà mốt Gucci
-                                                        lừng danh. Chai nước hoa này được lấy cảm hứng từ hình ảnh người
-                                                        đàn ông Gucci hiện đại - mạnh mẽ, tự tin và độc lập.
-                                                    </p>
-                                                    <div className={cx('product__details__tab__content__item')}>
-                                                        <h5>Products Infomation</h5>
-                                                        <p>
-                                                            A Pocket PC is a handheld computer, which features many of
-                                                            the same capabilities as a modern PC. These handy little
-                                                            devices allow individuals to retrieve and store e-mail
-                                                            messages, create a contact file, coordinate appointments,
-                                                            surf the internet, exchange text messages and more. Every
-                                                            product that is labeled as a Pocket PC must be accompanied
-                                                            with specific software to operate the unit and must feature
-                                                            a touchscreen and touchpad.
-                                                        </p>
-                                                        <p>
-                                                            As is the case with any new technology product, the cost of
-                                                            a Pocket PC was substantial during it’s early release. For
-                                                            approximately $700.00, consumers could purchase one of
-                                                            top-of-the-line Pocket PCs in 2003. These days, customers
-                                                            are finding that prices have become much more reasonable now
-                                                            that the newness is wearing off. For approximately $350.00,
-                                                            a new Pocket PC can now be purchased.
-                                                        </p>
-                                                    </div>
-                                                    <div className={cx('product__details__tab__content__item')}>
-                                                        <h5>Material used</h5>
-                                                        <p>
-                                                            Polyester is deemed lower quality due to its none natural
-                                                            quality’s. Made from synthetic materials, not natural like
-                                                            wool. Polyester suits become creased easily and are known
-                                                            for not being breathable. Polyester suits tend to have a
-                                                            shine to them compared to wool and cotton suits, this can
-                                                            make the suit look cheap. The texture of velvet is luxurious
-                                                            and breathable. Velvet is a great choice for dinner party
-                                                            jacket and can be worn all year round.
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                            <div
+                                                className={cx('tab-pane', { actived: activeContentTab === 'tabs-7' })}
+                                                id={'tabs-7'}
+                                                role={'tabpanel'}
+                                            >
+                                                {/* Nội dung của Mô Tả Chi Tiết */}
                                             </div>
                                         </div>
                                     </div>
@@ -497,147 +432,11 @@ function ShopDetail() {
                         </div>
                     </div>
                     <div className={cx('row')}>
-                        <div
-                            className={cx(
-                                'col-lg-3',
-                                'col-md-6',
-                                'col-sm-6',
-                                'col-md-6',
-                                'col-sm-6',
-                                'mix',
-                                'hot-sales',
-                            )}
-                        >
-                            <div className={cx('product__item', 'sale')}>
-                                <div className={cx('product__item__pic', 'set-bg')}>
-                                    <img src={'http://localhost:8080/img/products/Dior/Sauvage EDT/sa1.jpg'} alt="" />
-                                    <span className={cx('label')}>Sales</span>
-                                    <ul className={cx('product__hover')}>
-                                        <li>
-                                            <Link to="#">
-                                                <img src={'http://localhost:8080/img/icon/heart.png'} alt="" />
-                                                <span>Yêu thích</span>
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link to="#">
-                                                <img src={'http://localhost:8080/img/icon/cart.png'} alt="" />
-                                                <span>Giỏ hàng</span>
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link to="/user/shop-details">
-                                                <img src={'http://localhost:8080/img/icon/compare.png'} alt="" />
-                                                <span>Chi tiết</span>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className={cx('product__item__text')}>
-                                    <h6>Piqué Biker Jacket</h6>
-                                    <div className={cx('rating')}>
-                                        <IoStar />
-                                        <IoStar />
-                                        <IoStar />
-                                        <IoStarHalf />
-                                        <IoStarOutline />
-                                    </div>
-                                    <h6>$67.24</h6>
-                                </div>
+                        {perfumeRelated.map((item) => (
+                            <div key={item.idNH} className={cx('col-lg-3', 'col-md-6', 'col-sm-6', 'mix')}>
+                                <ProductItem data={item} />
                             </div>
-                        </div>
-
-                        <div
-                            className={cx(
-                                'col-lg-3',
-                                'col-md-6',
-                                'col-sm-6',
-                                'col-md-6',
-                                'col-sm-6',
-                                'mix',
-                                'new-arrivals',
-                            )}
-                        >
-                            <div className={cx('product__item', 'sale')}>
-                                <div className={cx('product__item__pic', 'set-bg')}>
-                                    <img src={'http://localhost:8080/img/products/Dior/Homme Sport/ho1.jpg'} alt="" />
-                                    <span className={cx('label')}>Sale</span>
-                                    <ul className={cx('product__hover')}>
-                                        <li>
-                                            <Link to="#">
-                                                <img src={'http://localhost:8080/img/icon/heart.png'} alt="" />
-                                                <span>Yêu thích</span>
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link to="#">
-                                                <img src={'http://localhost:8080/img/icon/cart.png'} alt="" />
-                                                <span>Giỏ hàng</span>
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link to="#">
-                                                <img src={'http://localhost:8080/img/icon/compare.png'} alt="" />
-                                                <span>Chi tiết</span>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className={cx('product__item__text')}>
-                                    <h6>Piqué Biker Jacket</h6>
-                                    <div className={cx('rating')}>
-                                        <IoStar />
-                                        <IoStar />
-                                        <IoStar />
-                                        <IoStarHalf />
-                                        <IoStarOutline />
-                                    </div>
-                                    <h6>$67.24</h6>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className={cx('col-lg-3', 'col-md-6', 'col-sm-6', 'col-md-6', 'col-sm-6', 'mix')}>
-                            <div className={cx('product__item', 'sale')}>
-                                <div className={cx('product__item__pic', 'set-bg')}>
-                                    <img
-                                        src={'http://localhost:8080/img/products/Calvin Klein/Eternity EDP/et1.jpg'}
-                                        alt=""
-                                    />
-                                    <ul className={cx('product__hover')}>
-                                        <li>
-                                            <Link to="#">
-                                                <img src={'http://localhost:8080/img/icon/heart.png'} alt="" />
-                                                <span>Yêu thích</span>
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link to="#">
-                                                <img src={'http://localhost:8080/img/icon/cart.png'} alt="" />
-                                                <span>Giỏ hàng</span>
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link to="#">
-                                                <img src={'http://localhost:8080/img/icon/compare.png'} alt="" />
-                                                <span>Chi tiết</span>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className={cx('product__item__text')}>
-                                    <h6>Piqué Biker Jacket</h6>
-                                    <div className={cx('rating')}>
-                                        <IoStar />
-                                        <IoStar />
-                                        <IoStar />
-                                        <IoStarHalf />
-                                        <IoStarOutline />
-                                    </div>
-                                    <h6>$43.48</h6>
-                                </div>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>

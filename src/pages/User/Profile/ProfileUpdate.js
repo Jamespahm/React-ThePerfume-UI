@@ -122,11 +122,11 @@ function ProfileUpdate() {
                         <Link to={'/'}>Thông Báo</Link>
                     </li>
                     <li className={cx('sidebar__menu-item')}>
-                        <Link to={'/'}>Kho Voucher</Link>
+                        <Link to={'/'}>Đổi mật khẩu</Link>
                     </li>
-                    <li className={cx('sidebar__menu-item')}>
+                    {/* <li className={cx('sidebar__menu-item')}>
                         <Link to={'/'}>Bảo mật</Link>
-                    </li>
+                    </li> */}
                 </ul>
             </div>
             <div className={cx('main-content')}>

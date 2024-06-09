@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom';
 import request from '~/utils/request';
 import styles from '../Admin.module.scss';
 import classNames from 'classnames/bind';
-import { FaSortDown, FaSortUp, FaRegEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 
 const cx = classNames.bind(styles);
 
 function TrashUser() {
     const [user, setUser] = useState([]);
+    const [sortBy, setSortBy] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -19,7 +20,7 @@ function TrashUser() {
         const fetchTrashUsers = async () => {
             try {
                 const params = {
-                    sortBy: 'tenKH',
+                    sortBy,
                     sortOrder,
                     page: currentPage,
                     limit: itemsPerPage,
@@ -32,9 +33,10 @@ function TrashUser() {
             }
         };
         fetchTrashUsers();
-    }, [sortOrder, currentPage]);
+    }, [sortBy, sortOrder, currentPage]);
 
-    const handleSortButtonClick = () => {
+    const handleSort = (field) => {
+        setSortBy(field);
         setSortOrder((prevSortOrder) => (prevSortOrder === 'asc' ? 'desc' : 'asc'));
     };
 
@@ -92,17 +94,67 @@ function TrashUser() {
                             <table className="table table-hover table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Hình ảnh</th>
-
+                                        <th className="col-1">Hình ảnh</th>
                                         <th scope="col">
-                                            Tên khách hàng
-                                            <button className={cx('sort-btn')} onClick={handleSortButtonClick}>
-                                                {sortOrder === 'asc' ? <FaSortUp /> : <FaSortDown />}
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('tenKH')}>
+                                                Tên khách hàng{'  '}
+                                                {sortBy === 'tenKH' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'tenKH' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
                                             </button>
                                         </th>
-                                        <th scope="col">Giới tính</th>
-                                        <th scope="col">Số điện thoại</th>
-                                        <th scope="col">Email</th>
+                                        <th>
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('gioitinh')}>
+                                                Giới tính{' '}
+                                                {sortBy === 'gioitinh' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'gioitinh' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('tenDN')}>
+                                                Tên đăng nhập{' '}
+                                                {sortBy === 'tenDN' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'tenDN' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('sdt')}>
+                                                Số điện thoại{' '}
+                                                {sortBy === 'sdt' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'sdt' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('email')}>
+                                                Email{' '}
+                                                {sortBy === 'email' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'email' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
                                         <th scope="col">Mật khẩu</th>
                                         <th scope="col">Tùy chọn</th>
                                     </tr>
@@ -115,6 +167,7 @@ function TrashUser() {
                                             </td>
                                             <td>{user.tenKH}</td>
                                             <td>{user.gioitinh}</td>
+                                            <td>{user.tenDN}</td>
                                             <td>{user.sdt}</td>
                                             <td>{user.email}</td>
                                             <td>{user.matkhau}</td>

@@ -1,27 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
 import moment from 'moment';
 
 import request from '~/utils/request';
 import styles from '../Admin.module.scss';
 import classNames from 'classnames/bind';
-import { FaSortDown, FaSortUp, FaRegEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 
 const cx = classNames.bind(styles);
 
 function TrashOrder() {
+    const [sortBy, setSortBy] = useState('');
     const [orders, setOrder] = useState([]);
     const [sortOrder, setSortOrder] = useState('asc');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 7; // Số lượng mục trên mỗi trang
-
+    const navigator = useNavigate();
     useEffect(() => {
         const fetchTrashOrders = async () => {
             try {
                 const params = {
-                    sortBy: 'tennhan',
+                    sortBy,
                     sortOrder,
                     page: currentPage,
                     limit: itemsPerPage,
@@ -34,9 +35,10 @@ function TrashOrder() {
             }
         };
         fetchTrashOrders();
-    }, [sortOrder, currentPage]);
+    }, [sortBy, sortOrder, currentPage]);
 
-    const handleSortButtonClick = () => {
+    const handleSort = (field) => {
+        setSortBy(field);
         setSortOrder((prevSortOrder) => (prevSortOrder === 'asc' ? 'desc' : 'asc'));
     };
 
@@ -98,19 +100,91 @@ function TrashOrder() {
                             <table className="table table-hover table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Người nhận </th>
-                                        <th scope="col">SDT nhận</th>
-                                        <th scope="col">Địa chỉ nhận</th>
-                                        <th scope="col">Tổng tiền</th>
                                         <th scope="col">
-                                            Ngày đặt
-                                            <button onClick={handleSortButtonClick}>
-                                                {sortOrder === 'asc' ? <FaSortUp /> : <FaSortDown />}
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('tennhan')}>
+                                                Người nhận{'  '}
+                                                {sortBy === 'tennhan' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'tennhan' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>{' '}
+                                        </th>
+                                        <th className="col-1">
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('sdtnhan')}>
+                                                SDT{' '}
+                                                {sortBy === 'sdtnhan' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'sdtnhan' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
                                             </button>
                                         </th>
-                                        <th scope="col">Thanh toán</th>
-                                        <th scope="col">Trạng thái</th>
-                                        <th>Tùy chọn </th>
+                                        <th className="col-2">
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('diachinhan')}>
+                                                Địa chỉ nhận{'  '}
+                                                {sortBy === 'diachinhan' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'diachinhan' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('tongtien')}>
+                                                Tổng tiền{'  '}
+                                                {sortBy === 'tongtien' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'tongtien' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th scope="col">
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('ngaydat')}>
+                                                Ngày đặt{'  '}
+                                                {sortBy === 'ngaydat' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'ngaydat' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th className="col-2">
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('thanhtoan')}>
+                                                Thanh toán{'  '}
+                                                {sortBy === 'thanhtoan' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'thanhtoan' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('trangthai')}>
+                                                Trạng thái
+                                                {sortBy === 'trangthai' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'trangthai' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th className="col-1">Tùy chọn </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -130,8 +204,16 @@ function TrashOrder() {
                                             <td onClick={() => handleViewDetail(order.idHD)}>
                                                 {moment(order.ngaydat).format('HH:mm:ss DD/MM/YYYY')}
                                             </td>
-                                            <td onClick={() => handleViewDetail(order.idHD)}>{order.thanhtoan}</td>
-                                            <td>{order.trangthai}</td>
+                                            <td onClick={() => handleViewDetail(order.idHD)}>
+                                                {order.thanhtoan === 'cod' && 'Thanh toán khi nhận hàng'}
+                                                {order.thanhtoan === 'banking' && 'Chuyển khoản ngân hàng'}
+                                            </td>
+                                            <td>
+                                                {order.trangthai === '1' && 'Chờ xác nhận'}
+                                                {order.trangthai === '2' && 'Đang giao'}
+                                                {order.trangthai === '3' && 'Hoàn thành'}
+                                                {order.trangthai === '4' && 'Đã hủy'}
+                                            </td>
                                             <td>
                                                 <button
                                                     onClick={() => handleRestoreItem(order.idHD)}

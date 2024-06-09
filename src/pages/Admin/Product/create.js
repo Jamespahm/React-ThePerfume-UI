@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import request from '~/utils/request';
 import styles from '../Admin.module.scss';
 import classNames from 'classnames/bind';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import CurrencyFormat from 'react-currency-format';
 const cx = classNames.bind(styles);
 
@@ -17,6 +19,7 @@ const CreatePerfume = () => {
         hinhanh4: null,
         soluong: '',
         mota: '',
+        motact: '',
         idTH: '',
         idL: '',
     });
@@ -35,12 +38,12 @@ const CreatePerfume = () => {
         // Fetch brands and categories when the component mounts
         request
             .get('/brand')
-            .then((response) => setBrands(response.data))
+            .then((response) => setBrands(response.data.brands))
             .catch((error) => console.error('Error fetching brands:', error));
 
         request
             .get('/category')
-            .then((response) => setCategories(response.data))
+            .then((response) => setCategories(response.data.categories))
             .catch((error) => console.error('Error fetching categories:', error));
     }, []);
 
@@ -81,7 +84,9 @@ const CreatePerfume = () => {
             });
         }
     };
-
+    const handleDescriptionChange = (data, field) => {
+        setPerfume((prev) => ({ ...prev, [field]: data }));
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -225,10 +230,13 @@ const CreatePerfume = () => {
                 </div>
                 <div className="row mt-3">
                     <div className="mb-3 col-md-3">
-                        <label className={cx('form-label')}>Hình ảnh 1 - Ảnh chính:</label>
+                        <label htmlFor="file-input" className={cx('upload-button')}>
+                            Hình ảnh 1 - Ảnh chính:
+                        </label>
                         <input
                             type="file"
-                            className={cx('form-control')}
+                            id="file-input"
+                            className={cx('file-input')}
                             name="hinhanh1"
                             onChange={handleChange}
                             required
@@ -238,10 +246,13 @@ const CreatePerfume = () => {
                         )}
                     </div>
                     <div className="mb-3 col-md-3">
-                        <label className={cx('form-label')}>Hình ảnh 2:</label>
+                        <label htmlFor="file-input2" className={cx('upload-button')}>
+                            Hình ảnh 2:
+                        </label>
                         <input
                             type="file"
-                            className={cx('form-control')}
+                            id="file-input2"
+                            className={cx('file-input')}
                             name="hinhanh2"
                             onChange={handleChange}
                             required
@@ -251,10 +262,13 @@ const CreatePerfume = () => {
                         )}
                     </div>
                     <div className="mb-3 col-md-3">
-                        <label className={cx('form-label')}>Hình ảnh 3:</label>
+                        <label htmlFor="file-input3" className={cx('upload-button')}>
+                            Hình ảnh 3:
+                        </label>
                         <input
                             type="file"
-                            className={cx('form-control')}
+                            id="file-input3"
+                            className={cx('file-input')}
                             name="hinhanh3"
                             onChange={handleChange}
                             required
@@ -264,10 +278,13 @@ const CreatePerfume = () => {
                         )}
                     </div>
                     <div className="mb-3 col-md-3">
-                        <label className={cx('form-label')}>Hình ảnh 4:</label>
+                        <label htmlFor="file-input4" className={cx('upload-button')}>
+                            Hình ảnh 4:
+                        </label>
                         <input
                             type="file"
-                            className={cx('form-control')}
+                            id="file-input4"
+                            className={cx('file-input')}
                             name="hinhanh4"
                             onChange={handleChange}
                             required
@@ -277,15 +294,22 @@ const CreatePerfume = () => {
                         )}
                     </div>
                 </div>
+
                 <div className="mb-3">
                     <label className={cx('form-label')}>Mô tả:</label>
-                    <textarea
-                        className={cx('form-control')}
-                        name="mota"
-                        value={perfume.mota}
-                        onChange={handleChange}
-                        required
-                    ></textarea>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        data={perfume.mota}
+                        onChange={(event, editor) => handleDescriptionChange(editor.getData(), 'mota')}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label className={cx('form-label')}>Mô tả chi tiết:</label>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        data={perfume.motact}
+                        onChange={(event, editor) => handleDescriptionChange(editor.getData(), 'motact')}
+                    />
                 </div>
                 <Link to={'/admin/qlsp'} className={cx('btn', 'btn-warning', 'btn-add')}>
                     Quay lại

@@ -26,7 +26,7 @@ function FavItemProduct({ data, onDelete }) {
                     <div className={cx('product__cart__item__text')}>
                         <h5>{data.tenNH}</h5>
                     </div>
-                    <h6>{data.dungtich}</h6>
+                    {/* <h6>{data.dungtich}</h6> */}
                 </Link>
             </td>
             <td>

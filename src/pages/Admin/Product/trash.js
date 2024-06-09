@@ -5,13 +5,14 @@ import CurrencyFormat from 'react-currency-format';
 import request from '~/utils/request';
 import styles from '../Admin.module.scss';
 import classNames from 'classnames/bind';
-import { FaSortDown, FaSortUp, FaRegEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaRegEdit, FaTrashAlt } from 'react-icons/fa';
 
 const cx = classNames.bind(styles);
 
 function TrashPerfume() {
     const [perfumes, setPerfume] = useState([]);
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortBy, setSortBy] = useState('tenNH');
+    const [sortOrder, setSortOrder] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 7; // Số lượng mục trên mỗi trang
@@ -20,7 +21,7 @@ function TrashPerfume() {
         const fetchTrashPerfumes = async () => {
             try {
                 const params = {
-                    sortBy: 'tenNH',
+                    sortBy,
                     sortOrder,
                     page: currentPage,
                     limit: itemsPerPage,
@@ -33,9 +34,10 @@ function TrashPerfume() {
             }
         };
         fetchTrashPerfumes();
-    }, [sortOrder, currentPage]);
+    }, [sortBy, sortOrder, currentPage]);
 
-    const handleSortButtonClick = () => {
+    const handleSort = (field) => {
+        setSortBy(field);
         setSortOrder((prevSortOrder) => (prevSortOrder === 'asc' ? 'desc' : 'asc'));
     };
 
@@ -94,14 +96,55 @@ function TrashPerfume() {
                                 <thead>
                                     <tr>
                                         <th scope="col">Hình ảnh</th>
-                                        <th scope="col">
-                                            Tên nước hoa
-                                            <button className={cx('sort-btn')} onClick={handleSortButtonClick}>
-                                                {sortOrder === 'asc' ? <FaSortUp /> : <FaSortDown />}
+                                        <th className="col-4">
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('tenNH')}>
+                                                Tên nước hoa{'  '}
+                                                {sortBy === 'tenNH' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'tenNH' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
                                             </button>
                                         </th>
-                                        <th scope="col">Giá bán</th>
-                                        <th scope="col">Số lượng</th>
+
+                                        <th scope="col">
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('giaban')}>
+                                                Giá bán{'  '}
+                                                {sortBy === 'giaban' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'giaban' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th scope="col">
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('soluong')}>
+                                                Kho{' '}
+                                                {sortBy === 'soluong' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'soluong' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
+                                        <th scope="col">
+                                            <button className={cx('sort-btn')} onClick={() => handleSort('soluongban')}>
+                                                Đã bán{' '}
+                                                {sortBy === 'soluongban' && sortOrder === 'desc' ? (
+                                                    <i className="fa-duotone fa-sort-down"></i>
+                                                ) : sortBy === 'soluongban' && sortOrder === 'asc' ? (
+                                                    <i className="fa-duotone fa-sort-up"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-sort"></i>
+                                                )}
+                                            </button>
+                                        </th>
                                         <th scope="col">Tùy chọn</th>
                                     </tr>
                                 </thead>
@@ -124,6 +167,7 @@ function TrashPerfume() {
                                                 />
                                             </td>
                                             <td>{perfume.soluong}</td>
+                                            <td>{perfume.soluongban}</td>
                                             <td>
                                                 <button
                                                     onClick={() => handleForceDeleteItem(perfume.idNH)}

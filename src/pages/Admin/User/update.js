@@ -111,11 +111,14 @@ function UpdateUser() {
                     <div className="mb-3 col-md-6">
                         <label className={cx('form-label')}>SDT:</label>
                         <input
-                            type="number"
+                            type="tel"
                             className={cx('form-control')}
                             name="sdt"
                             value={user.sdt}
                             onChange={handleChange}
+                            pattern="^0[0-9]{9}$"
+                            maxLength="10"
+                            title="Số điện thoại không đúng !"
                             required
                         />
                     </div>

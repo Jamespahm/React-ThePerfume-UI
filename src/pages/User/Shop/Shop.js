@@ -124,7 +124,7 @@ function Shop() {
         request
             .get('category')
             .then((res) => {
-                setCategory(res.data);
+                setCategory(res.data.categories);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
@@ -132,7 +132,7 @@ function Shop() {
         request
             .get('brand')
             .then((response) => {
-                setBrand(response.data);
+                setBrand(response.data.brands);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
@@ -209,10 +209,11 @@ function Shop() {
                                             >
                                                 <div className={cx('card-body')}>
                                                     <div className={cx('shop__sidebar__categories')}>
-                                                        <ul className={cx('')}>
+                                                        <ul>
                                                             {category.map((item) => (
                                                                 <li
                                                                     key={item.idL}
+                                                                    className={cx({ actived: item.idL === categoryId })}
                                                                     onClick={() => handleCategoryClick(item.idL)}
                                                                 >
                                                                     {item.tenL}
@@ -246,6 +247,7 @@ function Shop() {
                                                             {brand.map((item) => (
                                                                 <li
                                                                     key={item.idTH}
+                                                                    className={cx({ actived: item.idTH === brandId })}
                                                                     onClick={() => handleBrandClick(item.idTH)}
                                                                 >
                                                                     {item.tenTH}
@@ -276,13 +278,21 @@ function Shop() {
                                                 <div className={cx('card-body')}>
                                                     <div className={cx('shop__sidebar__price')}>
                                                         <ul>
-                                                            <li onClick={() => handlePriceRangeChange('0 - 2000000')}>
+                                                            <li
+                                                                onClick={() => handlePriceRangeChange('0 - 2000000')}
+                                                                className={cx({
+                                                                    actived: priceRange === '0 - 2000000',
+                                                                })}
+                                                            >
                                                                 0 - 2.000.000
                                                             </li>
                                                             <li
                                                                 onClick={() =>
                                                                     handlePriceRangeChange('2000000 - 4000000')
                                                                 }
+                                                                className={cx({
+                                                                    actived: priceRange === '2000000 - 4000000',
+                                                                })}
                                                             >
                                                                 2.000.000 - 4.000.000
                                                             </li>
@@ -290,6 +300,9 @@ function Shop() {
                                                                 onClick={() =>
                                                                     handlePriceRangeChange('4000000 - 6000000')
                                                                 }
+                                                                className={cx({
+                                                                    actived: priceRange === '4000000 - 6000000',
+                                                                })}
                                                             >
                                                                 4.000.000 - 6.000.000
                                                             </li>
@@ -297,6 +310,9 @@ function Shop() {
                                                                 onClick={() =>
                                                                     handlePriceRangeChange('6000000 - 999999999')
                                                                 }
+                                                                className={cx({
+                                                                    actived: priceRange === '6000000 - 999999999',
+                                                                })}
                                                             >
                                                                 6.000.000 +
                                                             </li>
@@ -305,7 +321,7 @@ function Shop() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={cx('card')}>
+                                        {/* <div className={cx('card')}>
                                             <div className={cx('card-heading')}>
                                                 <Link to="#" data-toggle="collapse" data-target="#collapseFour">
                                                     Dung tích
@@ -335,7 +351,7 @@ function Shop() {
                                                         </label>
                                                         <label htmlFor="md">
                                                             100ml
-                                                            <input type="radio" id="md" />
+                                                            <input  type="radio" id="md" />
                                                         </label>
                                                         <label htmlFor="xxl">
                                                             150ml
@@ -344,8 +360,8 @@ function Shop() {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className={cx('card')}>
+                                        </div> */}
+                                        {/* <div className={cx('card')}>
                                             <div className={cx('card-heading')}>
                                                 <Link to="" data-toggle="collapse" data-target="#collapseSix">
                                                     Nhãn Hiệu
@@ -371,7 +387,7 @@ function Shop() {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>
@@ -398,7 +414,9 @@ function Shop() {
                             </div>
                             <div className={cx('row')}>
                                 {result.map((item) => (
-                                    <ProductItem key={item.idNH} data={item} />
+                                    <div key={item.idNH} className={cx('col-lg-4', 'col-md-6', 'col-sm-6')}>
+                                        <ProductItem data={item} />
+                                    </div>
                                 ))}
                             </div>
 
