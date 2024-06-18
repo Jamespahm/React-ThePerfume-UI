@@ -203,8 +203,6 @@ function Dashboard() {
                     </div>
                 </div>
             </div>
-            {/*  */}
-            {/* {dt !== 0 && ( */}
             <div className="card strpied-tabled-with-hover">
                 <div className={cx('card-header-table')}>
                     <h5 className={cx('card-title')}>
